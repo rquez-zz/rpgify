@@ -1,0 +1,116 @@
+---
+swagger: '2.0'
+info:
+  version: 0.0.0
+  title: Untitled Web App
+  description: RPG-ify your real life skills
+  license:
+    name: Open source
+host: rpgify.com
+schemes:
+  - https
+basePath: /
+produces:
+  - application/json
+paths:
+  /login:
+    post:
+      summary: Log user into the system
+      description: ""
+      parameters:
+        - name: Credentials
+          in: body
+          description: User credentials to login.
+          required: true
+          schema:
+            $ref: '#/definitions/Credentials'
+      responses:
+        "200":
+          description: Successful login
+        "401":
+          description: Invalid username/password supplied
+  /user:
+    post:
+      summary: Create a new user
+      description: ""
+      parameters:
+        - name: User
+          in: body
+          required: true
+          description: Creates a new user on user sign up. 
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Invalid user parameters
+  /user:
+    put:
+      summary: Update a user information
+      parameters:
+        - name: User
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses: 
+        "200":
+          description: Successful operation
+        "400":
+          description: Invalid update
+  /{username}/skill:
+    get:
+      summary: Get skill for a user
+      description: ""
+      parameters:
+        - name: username
+          in: path
+          description: ""
+          required: true
+          type: string
+      responses:
+        "200":
+          description: ""
+          schema: 
+            $ref: '#/definitions/Skill'
+  /{username}/skill:
+    post:
+      summary: Post a new skill for a user
+      parameters:
+        - name: username
+          in: path
+          description: ""
+          required: true
+        - name: skill
+          in: body
+          description: ""
+          required: true
+          schema:
+            $ref: '#/definitions/Skill'
+      responses:
+        "200":
+          description: Successful operation
+        "401":
+          description: Invalid credentials
+  /{username}/skill:
+    put:
+      summary: Update a skill for a user
+      parameters:
+        - name: username
+          in: path
+          description: ""
+          required: true
+        - name: skill
+          in: body
+          description: ""
+          required: true 
+          schema:
+            $ref: '#/definitions/Skill'
+      responses:
+        "200":
+          description: Successful operation
+        "401":
+          description: Invalid credentials
+      
