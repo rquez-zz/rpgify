@@ -1,7 +1,8 @@
 # Project Name
 
-Rpgify allows a user to turn their life into a customized role playing game. Users create skills which hold a level value. For each level the user specifies the achievement required to complete that level. Once that achievement is accomplished they advance a level. 
-
+*Rpgify* allows a user to turn their life into a customized role playing game.
+Users create skills which hold a level value.
+For each level the user specifies the achievement required to complete that level. Once that achievement is accomplished they advance a level. 
 
 # Structure
 
@@ -12,6 +13,20 @@ The back end uses Node.js to proxy the MongoDB database and receive REST request
 ## Installation
 
 TODO: Describe the installation process
+
+## Testing
+
+* API Unit Test
+`npm run api-test`
+
+* Client Unit Test
+`npm run client-test`
+
+* Integration Test
+`npm run int-test`
+
+* End to End Test
+`npm run e2e-test`
 
 ## Usage
 
