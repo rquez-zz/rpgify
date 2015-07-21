@@ -7,7 +7,10 @@
     "doc": "doc"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "api-test": "mocha --compilers js:babel/register spec/unit-api/*.js",
+    "int-test": "mocha --compilers js:babel/register spec/int/*.js",
+    "client-test": "karma start spec/unit-client/karma.conf.js",
+    "e2e-test": "protractor spec/e2e/config.js"
   },
   "repository": {
     "type": "git",
@@ -19,5 +22,21 @@
   "dependencies": {
     "hapi": "^8.8.0",
     "mongodb": "^2.0.39"
+    "babel": "^5.8.3",
+    "hapi": "^8.8.0",
+    "mongodb": "^2.0.39"
+  },
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "chai-as-promised": "^5.1.0",
+    "karma": "^0.13.2",
+    "karma-babel-preprocessor": "^5.2.1",
+    "karma-chai": "^0.1.0",
+    "karma-mocha": "^0.2.0",
+    "karma-mocha-reporter": "^1.0.2",
+    "karma-phantomjs-launcher": "^0.2.0",
+    "mocha": "^2.2.5",
+    "phantomjs": "^1.9.17",
+    "sinon": "^1.15.4"
   }
 }
