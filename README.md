@@ -2,7 +2,9 @@
 
 *Rpgify* allows a user to turn their life into a customized role playing game.
 Users create skills which hold a level value.
-For each level the user specifies the achievement required to complete that level. Once that achievement is accomplished they advance a level. 
+For each level the user specifies the achievements required to complete that level.
+Once the achievements are accomplished they advance a level.
+For each achievement completed, experience points are gained.
 
 # Structure
 
