@@ -8,9 +8,14 @@ For each achievement completed, experience points are gained.
 
 # Structure
 
-The front end uses angular version 1.4. Restangular is used to make requests to backend resources that are listed in the swagger api documentation.
+angular-frontend
+The front end uses angular version 1.4.
+Restangular is used to make requests to backend resources that are
+listed in the swagger api documentation.
 
-The back end uses Node.js to proxy the MongoDB database and receive REST requests from angular.
+node-backend
+The back end uses Node.js to proxy the MongoDB database and receive
+REST requests from angular.
 
 ## Installation
 
@@ -18,38 +23,14 @@ TODO: Describe the installation process
 
 ## Testing
 
-* API Unit Test
-`npm run api-test`
-
-* Client Unit Test
-`npm run client-test`
-
-* Integration Test
+node-backend
+`npm run unit-test`
 `npm run int-test`
 
-* End to End Test
+angular-frontend
+`npm run unit-test`
 `npm run e2e-test`
 
 ## Usage
 
 TODO: Write usage instructions
-
-## Contributing
-
-1. Fork it!
-2. Create your feature branch: `git checkout -b my-new-feature`
-3. Commit your changes: `git commit -am 'Add some feature'`
-4. Push to the branch: `git push origin my-new-feature`
-5. Submit a pull request :D
-
-## History
-
-TODO: Write history
-
-## Credits
-
-TODO: Write credits
-
-## License
-
-TODO: Write license
