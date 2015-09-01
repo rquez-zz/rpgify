@@ -1,4 +1,3 @@
-//TODO: Add loginHandler
 import loginHandler from '../handlers/login';
 
 export default [
