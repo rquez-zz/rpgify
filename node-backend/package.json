@@ -21,6 +21,7 @@
   "dependencies": {
     "babel": "^5.8.3",
     "hapi": "^8.8.0",
+    "hapi-router": "^3.0.1",
     "mongodb": "^2.0.39",
     "nodemon": "^1.4.1"
   },

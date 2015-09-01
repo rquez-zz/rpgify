@@ -2,6 +2,7 @@ import Hapi from 'hapi';
 import config from './app/config/rpgify';
 
 import blipp from 'blipp';
+import router from 'hapi-router';
 
 var server = new Hapi.Server();
 
@@ -11,6 +12,11 @@ server.register([{
     register: blipp,
     options: {
         showAuth: true
+    }
+}, {
+    register: router,
+    options: {
+        routes: './app/routes/*.js'
     }
 }], (err) => {
     if (err) {
