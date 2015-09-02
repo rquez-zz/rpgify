@@ -1,4 +1,4 @@
-# Project Name
+# rpgify 
 
 *Rpgify* allows a user to turn their life into a customized role playing game.
 Users create skills which hold a level value.
@@ -25,11 +25,6 @@ node-backend
 
 * `npm run unit-test`
 * `npm run int-test`
-
-angular-frontend
-
-* `npm run unit-test`
-* `npm run e2e-test`
 
 ## Usage
 
