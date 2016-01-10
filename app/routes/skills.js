@@ -13,7 +13,7 @@ export default [
         method: 'POST',
         path: '/skills',
         config: {
-            handler: skillsHandler.createSkill 
+            handler: skillsHandler.createSkill
         }
     },
     {

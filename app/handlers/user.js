@@ -4,4 +4,4 @@ export default {
     updateUser: () => {},
     getUser: () => {},
     deleteUser: () => {}
-}; 
+};

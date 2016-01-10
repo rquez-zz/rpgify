@@ -4,4 +4,4 @@ export default {
     updateSkill: () => {},
     getSkills: () => {},
     deleteSkill: () => {}
-}; 
+};
