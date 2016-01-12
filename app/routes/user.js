@@ -5,7 +5,8 @@ export default [
         method: 'POST',
         path: '/user',
         config: {
-            handler: userHandler.createUser
+            handler: userHandler.createUser,
+            auth: false
         }
     },
     {
