@@ -20,26 +20,17 @@
   "homepage": "https://bitbucket.org/rquez/rpgify#readme",
   "dependencies": {
     "babel": "^5.8.3",
-    "hapi": "^8.8.0",
+    "hapi": "^12.1.0",
     "hapi-auth-jwt": "^4.0.0",
     "hapi-router": "^3.0.1",
     "jsonwebtoken": "^5.5.4",
-    "mongodb": "^2.0.39",
-    "nodemon": "^1.4.1"
+    "mongodb": "^2.1.4"
   },
   "devDependencies": {
     "blipp": "^2.3.0",
     "chai": "^3.2.0",
     "chai-as-promised": "^5.1.0",
     "jshint": "^2.8.0",
-    "karma": "^0.13.2",
-    "karma-babel-preprocessor": "^5.2.1",
-    "karma-chai": "^0.1.0",
-    "karma-mocha": "^0.2.0",
-    "karma-mocha-reporter": "^1.0.2",
-    "karma-phantomjs-launcher": "^0.2.0",
-    "mocha": "^2.2.5",
-    "phantomjs": "^1.9.17",
-    "sinon": "^1.15.4"
+    "mocha": "^2.2.5"
   }
 }
