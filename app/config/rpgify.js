@@ -7,5 +7,8 @@ export default {
     keyfile: env.PRIVATEKEY || 'privateKey',
     jwtOpts: {
         issuer: 'rpgify'
+    },
+    mongodb: {
+        url:  'mongodb://localhost/rpgify'
     }
 };

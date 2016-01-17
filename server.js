@@ -1,6 +1,7 @@
 import Hapi from 'hapi';
 import config from './app/config/rpgify';
 import jwt from './app/helpers/jwt';
+import db from './app/helpers/db';
 
 import fs from 'fs';
 import blipp from 'blipp';
