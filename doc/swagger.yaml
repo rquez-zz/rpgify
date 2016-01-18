@@ -1,349 +1,324 @@
----
 swagger: '2.0'
 info:
-  version: 0.0.0
-  title: rpgify
-  description: |
+    version: 0.0.0
+title: rpgify
+description: |
     RPG-ify your real life skills.
     A user creates individual skills which they can level up by completing
-    tasks at each level. 
-    
+    tasks at each level.
+
     Users can create any skill. Each skill is assigned a name, color, 25
-    levels, and a counter for experience points. The user starts at level 1 
-    with 0 experience points for that skill. 
-    
+    levels, and a counter for experience points. The user starts at level 1
+    with 0 experience points for that skill.
+
     Users can add or remove levels. The max amount of levels is 100 and the
     minimum amount of levels is 5. Each level holds tasks. Experience points
-    are gained by completing tasks at each level. Each task rewards the same 
-    amount of exp. The amount of exp to levelup is divided evenly by the 
-    amount of tasks at the current level. Once all the tasks are completed, 
+    are gained by completing tasks at each level. Each task rewards the same
+    amount of exp. The amount of exp to levelup is divided evenly by the
+    amount of tasks at the current level. Once all the tasks are completed,
     the skill level increases.
-  
-    When a skill is created, 25 levels are automatically added, but without 
-    tasks. A user can't level up without adding tasks to their current level. 
+
+    When a skill is created, 25 levels are automatically added, but without
+    tasks. A user can't level up without adding tasks to their current level.
     Users can add tasks to any level to plan their progress. Only a maximum of
-    10 tasks can be added to any level and a minimum of 1 task. Each task is 
-    custom built by the user and determined by the user when it is completed. 
-   
-  license:
-    name: GNU General Public License 
+    10 tasks can be added to any level and a minimum of 1 task. Each task is
+    custom built by the user and determined by the user when it is completed.
+license:
+    name: GNU General Public License
 basePath: /
 produces:
   - application/json
 paths:
-  /login:
-    post:
-      summary: Log user into application
-      description: |
-        The POST request must have a Credentials object in the payload. With
-        valid Credentials, the API will return a valid JWT that encodes the 
-        username and password. The most of the API is inaccessible without the 
-        JWT obtained here.
-      parameters:
-        - name: Credentials
-          in: body
-          description: JSON with user's username and password.
-          required: true
-          schema:
-            $ref: '#/definitions/Credentials'
-      responses:
-        200:
-          description: JWT successfully created and returned.
-          schema:
-            $ref: '#/securityDefinitions/jwt'
-        401:
-          description: Invalid username/password supplied.
-  /user:
-    post:
-      summary: Create a new user
-      description: |
-        POST a User object during user registration. User is added to database.
-        Only returns a response code.
-      security:
-        - jwt: []
-      parameters:
-        - name: User
-          in: body
-          required: true
-          description: Creates a new user on user sign up.
-          required: true
-          schema:
-            $ref: '#/definitions/User'
-      responses:
-        200:
-          description: User successfuly created.
-        400:
-          description: Invalid user parameters
-        401:
-          description: Invalid authentication.
-    patch:
-      summary: Update a user's information
-      description: |
-        PATCH with a user object to update the existing user.
-      security:
-        - jwt: []
-      parameters:
-        - name: User
-          in: body
-          description: JSON with user data.
-          required: true
-          schema:
-            $ref: '#/definitions/User'
-      responses:
-        200:
-          description: User successfuly updated.
-        400:
-          description: Invalid user information.
-        401:
-          description: Invalid authentication.
-    get:
-      summary: Get user information
-      description: |
-        GETs the entire User object to be read by the client.
-        User is identified from the incoming JWT.
-      security:
-        - jwt: []
-      responses:
-        200:
-          description: User successfully returned.
-          schema:
-            $ref: '#/definitions/User'
-        401:
-          description: Invalid authentication.
-    delete:
-      summary: Delete a user
-      description: |
-        DELETE entire user from database. 
-        User is identified from the incoming JWT.
-      security:
-        - jwt: []
-      responses:
-        200:
-          description: User successfully deleted.
-        401:
-          description: Unauthorized request.
-  /skills:
-    get:
-      summary: GET user's skills.
-      description: |
-        GET the current user's array of skills.
-        User identified from incoming JWT. 
-      security:
-        - jwt: []
-      responses:
-        200:
-          description: Return all skills for user.
-          schema:
+    /login:
+        post:
+            summary: Log user into application
+            description: "The POST request must have a Credentials object in the payload. With\nvalid Credentials, the API will return a valid JWT that encodes the \nusername and password. The most of the API is inaccessible without the \nJWT obtained here.\n"
+            parameters:
+                - name: Credentials
+                in: body
+                description: "JSON with user's username and password."
+                required: true
+                schema:
+                    $ref: '#/definitions/Credentials'
+            responses:
+                '200':
+                    description: JWT successfully created and returned.
+                '401':
+                    description: Invalid username/password supplied.
+    /user:
+        post:
+            summary: Create a new user
+            description: |
+                POST a User object during user registration. User is added to database.
+                Only returns a response code.
+            security:
+                - jwt: []
+            parameters:
+                - name: User
+                in: body
+                required: true
+                description: Creates a new user on user sign up.
+                schema:
+                    $ref: '#/definitions/User'
+            responses:
+                '200':
+                    description: User successfuly created.
+                '400':
+                    description: Invalid user parameters
+                '401':
+                    description: Invalid authentication.
+        patch:
+            summary: "Update a user's information"
+            description: |
+                PATCH with a user object to update the existing user.
+            security:
+                - jwt: []
+            parameters:
+                - name: User
+                in: body
+                description: JSON with user data.
+                required: true
+                schema:
+                    $ref: '#/definitions/User'
+            responses:
+                '200':
+                    description: User successfuly updated.
+                '400':
+                    description: Invalid user information.
+                '401':
+                    description: Invalid authentication.
+        get:
+            summary: Get user information
+            description: |
+                GETs the entire User object to be read by the client.
+                User is identified from the incoming JWT.
+            security:
+                - jwt: []
+            responses:
+                '200':
+                    description: User successfully returned.
+                schema:
+                    $ref: '#/definitions/User'
+                '401':
+                    description: Invalid authentication.
+            delete:
+                summary: Delete a user
+            description: |
+                DELETE entire user from database.
+                User is identified from the incoming JWT.
+            security:
+                - jwt: []
+            responses:
+                '200':
+                    description: User successfully deleted.
+                '401':
+                    description: Unauthorized request.
+    /skills:
+        get:
+            summary: "GET user's skills."
+            description: |
+                GET the current user's array of skills.
+                User identified from incoming JWT.
+            security:
+                - jwt: []
+            responses:
+                '200':
+                    description: Return all skills for user.
+                schema:
+                    type: array
+                    items:
+                        $ref: '#/definitions/Skill'
+                '401':
+                    description: Invalid authentication.
+            post:
+                summary: Create a new skill.
+            description: |
+                CREATE a new skill to the user's array of skills.
+            security:
+                - jwt: []
+            parameters:
+                - name: Skill
+                in: body
+                required: true
+                schema:
+                    $ref: '#/definitions/Skill'
+            responses:
+                '200':
+                    description: New Skill successfuly created.
+                '400':
+                    description: User cannot exceed maximum number of skills.
+                '401':
+                    description: Unauthorized request.
+    '/skills/{name}':
+        patch:
+            summary: Update a Skill
+            security:
+                - jwt: []
+            description: |
+                UPDATE an existing skill using partial Skill data.
+                The user is first identified from the incoming JWT.
+                A skill id is required to update the correct skill.
+            parameters:
+                - name: Skill
+                in: body
+                required: true
+                schema:
+                    $ref: '#/definitions/Skill'
+                - name: name
+                in: path
+                required: true
+                type: string
+            responses:
+                '200':
+                    description: Skill updated.
+                '400':
+                    description: Invalid Skill data supplied.
+                '401':
+                    description: Unauthorized request.
+            delete:
+                summary: Delete a Skill
+            security:
+                - jwt: []
+            description: |
+                DELETE an existing skill that matches the given skill id. The user is
+                first identified from the incoming JWT.
+            parameters:
+                - name: name
+                in: path
+                required: true
+                type: string
+            responses:
+                '200':
+                    description: Skill successfully deleted.
+                '400':
+                    description: Invalid skillId provided
+                '401':
+                    description: Unauthorized request.
+definitions:
+    Credentials:
+        description: |
+            The object containing the username and password at login
+        properties:
+            username:
+                type: string
+        password:
+            type: string
+    User:
+        description: |
+            The user object that is the highest hierarchical api object containing
+            all the other objects the user interacts with.
+
+            username
+            The user's username defined at user registration
+
+            userId
+            A randomly generated UUID that identifies the user. This id is contained
+            in the JWT for authentication.
+
+            lastLogin
+            The user's last login date and time.
+
+            firstname
+            The user's firstname
+
+            lastname
+            The user's lastname
+
+            userExp
+            The user's current exp which is the sum of the exp of all skills
+
+            skills
+            An array of skill objects that belong to the user
+        properties:
+            username:
+                type: string
+        userId:
+            type: string
+            format: UUID
+        signup: 
+        type: string
+        format: date-time
+        lastLogin:
+            type: string
+            format: date-time
+        firstname:
+            type: string
+        lastname:
+            type: string
+        userExp:
+            type: integer
+        skills:
             type: array
             items:
-              $ref: '#/definitions/Skill'
-        401:
-          description: Invalid authentication.
-    post:
-      summary: Create a new skill.
-      description: |
-        CREATE a new skill to the user's array of skills. 
-      security:
-      - jwt: []
-      parameters:
-      - name: Skill
-        in: body
-        required: true
-        schema:
-            $ref: '#/definitions/Skill'
-      responses:
-        200:
-          description: New Skill successfuly created.
-        400:
-          description: User cannot exceed maximum number of skills.
-        401:
-          description: Unauthorized request. 
-  /skills/{name}:
-    patch:
-      summary: Update a Skill
-      security:
-        - jwt: []
-      description: |
-        UPDATE an existing skill using partial Skill data. 
-        The user is first identified from the incoming JWT. 
-        A skill id is required to update the correct skill. 
-      parameters:
-      - name: Skill
-        in: body
-        required: true
-        schema:
-          $ref: '#/definitions/Skill'
-      - name: name
-        in: path
-        required: true
-        type: string
-      responses:
-        200:
-          description: Skill updated.
-        400: 
-          description: Invalid Skill data supplied.
-        401:
-          description: Unauthorized request.
-    delete:
-      summary: Delete a Skill
-      security:
-      - jwt: []
-      description: |
-        DELETE an existing skill that matches the given skill id. The user is
-        first identified from the incoming JWT. 
-      parameters:
-      - name: name
-        in: path
-        required: true
-        type: string
-      responses:
-        200: 
-          description: Skill successfully deleted.
-        400: 
-          description: Invalid skillId provided
-        401: 
-          description: Unauthorized request. 
-definitions:
-  Credentials:
-    description: |
-      The object containing the username and password at login
-    properties:
-      username:
-        type: string
-      password:
-        type: string
-  User:
-    description: |
-      The user object that is the highest hierarchical api object containing
-      all the other objects the user interacts with.
-      
-      username
-      The user's username defined at user registration
-      
-      userId
-      A randomly generated UUID that identifies the user. This id is contained
-      in the JWT for authentication.
-      
-      lastLogin
-      The user's last login date and time.
-      
-      firstname
-      The user's firstname
-      
-      lastname
-      The user's lastname
-      
-      userExp
-      The user's current exp which is the sum of the exp of all skills
-      
-      skills
-      An array of skill objects that belong to the user
-    properties:
-      username:
-        type: string
-      userId:
-        type: string
-        format: UUID
-      lastLogin:
-        type: string
-        format: date-time
-      firstname:
-        type: string
-      lastname: 
-        type: string
-      userExp:
-        type: integer
-      skills:
-        type: array
-        items:
-          $ref: '#/definitions/Skill'
-  Skill:
-    description: |
-      The skill object that is contained in an array of skills under a  
-      specific user.
-      
-      skillName
-      The string name of the skill that is used to identify the skill
-      
-      levelCap
-      The maximum amount of levels a user is able to make for this skill
-      
-      levels
-      The array of level objects for this skill
-      
-      currentLevel
-      The current level for this skill
-      
-      lastUpdated
-      The last date the skill was improved by the user
-      
-      skillType
-      The type this skill falls under
-      
-      skillColor
-      The user defined color for this skill
-      
-      expSkill
-      The amount of exp rewarded for this skill
-    properties:
-      skillName:
-        type: string
-      levelCap:
-        type: string
-      levels:
-        type: array
-        items:
-          $ref: '#/definitions/Level'
-      currentLevel:
-        type: string
-      lastUpdate:
-        type: string
-        format: date-time
-      skillType:
-        type: string
-      skillColor:
-        type: integer
-      expSkill:
-        type: integer
-  Level:
-    description: |
-      The level object that is contained in an array of levels under a 
-      specific skill and user.
-      
-      number
-      The level number {1, 2, 3...}
-      
-      expToComplete
-      The amout of exp needed to complete this level.
-      
-      tasks
-      The array of task objects for this level
-    properties:
-      number:
-        type: integer
-      expToComplete:
-        type: integer
-      tasks:
-        type: array
-        items:
-          $ref: '#/definitions/Task'
-  Task:
-    description: |
-      The task object that is contained in an array of tasks under a specific 
-      level.
-      
-      name
-      The objective of the task
-      
-      isDone
-      Marks if the task is done or not
-    properties:
-      objective: 
-        type: string
-      isDone:
-        type: boolean
+                $ref: '#/definitions/Skill'
+    Skill:
+        description: |
+            The skill object that is contained in an array of skills under a
+            specific user.
+
+            skillName
+            The string name of the skill that is used to identify the skill
+
+            levelCap
+            The maximum amount of levels a user is able to make for this skill
+
+            levels
+            The array of level objects for this skill
+
+            currentLevel
+            The current level for this skill
+
+            lastUpdated
+            The last date the skill was improved by the user
+
+            skillType
+            The type this skill falls under
+
+            skillColor
+            The user defined color for this skill
+
+            expSkill
+            The amount of exp rewarded for this skill
+        properties:
+            skillName:
+                type: string
+        levelCap:
+            type: integer
+        levels:
+            type: array
+            items:
+                $ref: '#/definitions/Level'
+        currentLevel:
+            type: integer
+        lastUpdate:
+            type: string
+            format: date-time
+        skillType:
+            type: string
+        skillColor:
+            type: integer
+        expSkill:
+            type: integer
+    Level:
+        description: "The level object that is contained in an array of levels under a \nspecific skill and user.\n\nnumber\nThe level number {1, 2, 3...}\n\nexpToComplete\nThe amout of exp needed to complete this level.\n\ntasks\nThe array of task objects for this level\n"
+        properties:
+            number:
+                type: integer
+        expToComplete:
+            type: integer
+        tasks:
+            type: array
+            items:
+                $ref: '#/definitions/Task'
+    Task:
+        description: "The task object that is contained in an array of tasks under a specific \nlevel.\n\nname\nThe objective of the task\n\nisDone\nMarks if the task is done or not\n"
+        properties:
+            objective:
+                type: string
+        isDone:
+            type: boolean
 securityDefinitions:
-  jwt:
-    type: apiKey
+    jwt:
+        type: apiKey
     name: Json Web Token
     in: header

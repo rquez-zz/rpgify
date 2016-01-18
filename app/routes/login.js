@@ -5,7 +5,8 @@ export default [
         method: 'POST',
         path: '/login',
         config: {
-            handler: loginHandler.login
+            handler: loginHandler.login,
+            auth: false
         }
     }
 ];
