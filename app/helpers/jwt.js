@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import fs from 'fs';
 import config from '../config/rpgify';
 
-var key = fs.readFileSync(config.keyfile);
+var key = fs.readFileSync(config.key.path);
 
 export default {
     validateToken: (decoded, callback) => {
@@ -13,6 +13,6 @@ export default {
         return callback(null, true, decoded);
     },
     sign: (token) => {
-        return jwt.sign(token, key, config.jwtOpts);
+        return jwt.sign(token, key, config.jwt);
     }
 };

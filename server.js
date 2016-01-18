@@ -9,7 +9,7 @@ import router from 'hapi-router';
 import hapiAuthJwt from 'hapi-auth-jwt';
 
 var server = new Hapi.Server();
-var key = fs.readFileSync(config.keyfile);
+var key = fs.readFileSync(config.key.path);
 
 server.connection(config.connection);
 
