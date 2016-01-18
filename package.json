@@ -20,12 +20,15 @@
   "homepage": "https://bitbucket.org/rquez/rpgify#readme",
   "dependencies": {
     "babel": "^5.8.3",
+    "bcrypt": "^0.8.5",
+    "boom": "^3.1.1",
     "hapi": "^12.1.0",
     "hapi-auth-jwt": "^4.0.0",
     "hapi-router": "^3.0.1",
     "jsonwebtoken": "^5.5.4",
     "mongodb": "^2.1.4",
-    "mongoose": "^4.3.5"
+    "mongoose": "^4.3.5",
+    "shortid": "^2.2.4"
   },
   "devDependencies": {
     "blipp": "^2.3.0",
