@@ -5,10 +5,10 @@ import config from '../config/rpgify';
 var key = fs.readFileSync(config.key.path);
 
 export default {
-    validateToken: (decoded, callback) => {
+    validateToken: (request, decoded, callback) => {
         if (!decoded) {
-            logger.error('Invalid JWT');
-            return callback(null, false);
+            // TODO: Add boom error here
+            return callback(null, false, decoded);
         }
         return callback(null, true, decoded);
     },

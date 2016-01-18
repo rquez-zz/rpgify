@@ -1,4 +1,4 @@
-import User from '../models/schema.js';
+import User from '../models/schema';
 import bcrypt from 'bcrypt';
 import config from '../config/rpgify';
 
@@ -27,5 +27,14 @@ export default {
     },
     updateUser: () => {},
     getUser: () => {},
-    deleteUser: () => {}
+    deleteUser: (req, reply) => {
+
+        User.remove({ _id: req.auth.credentials.userid }, (err) => {
+            // TODO: Add boom error here
+            if (err) {
+                reply(err);
+            }
+            reply().code(204);
+        });
+    }
 };
