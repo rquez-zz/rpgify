@@ -2,56 +2,90 @@ import { expect } from 'chai';
 import server from './../../server';
 import jsonwebtoken from 'jsonwebtoken';
 import config from './../../app/config/rpgify';
+import User from './../../app/models/schema';
+
 import fs from 'fs';
+import mongoose from 'mongoose';
 
-var login = {
-    username: 'test'
-};
+var key = fs.readFileSync(config.key.path);
 
-var statusCode;
-var key = fs.readFileSync(config.keyfile);
+describe('RPGify Integration Test', () => {
 
-describe("When user logs in", () => {
+    describe('When a user registers', () => {
 
-    var jwt;
-
-    before(done => {
-        server.inject({
-            url:'/login',
-            method:'POST',
-            payload: login,
-            headers: {
-                'Content-Type':'application/json'
-            }
-        }, response => {
-            statusCode = response.statusCode;
-            jwt = response.payload;
-            done();
-        });
-    });
-
-    it("should return a 200 status code", () => {
-        expect(statusCode).to.equal(200);
-    });
-
-    it("should return a jwt", () => {
-        expect(jwt).to.not.be.empty;
-    });
-
-    describe("When jwt is decoded", () => {
-
-        var userToken;
+        var user = {
+            username: 'test',
+            password: 'password',
+            firstname: 'firstname',
+            lastname: 'lastname'
+        }, statusCode;
 
         before(done => {
-            jsonwebtoken.verify(jwt, key, (err, decoded) => {
-                userToken = decoded;
+            server.inject({
+                url:'/user',
+                method:'POST',
+                payload: user,
+                headers: { 'Content-Type':'application/json' }
+            }, response => {
+                statusCode = response.statusCode;
                 done();
             });
         });
 
-        it("should have username inside", () => {
-            expect(userToken.username).to.equal(login.username);
+        it("should return a 204 status code", () => {
+            expect(statusCode).to.equal(204);
+        });
+
+        it('should populate database with a user', (done) => {
+            User.findOne({ username: user.username }, (err, user) => {
+                expect(user.username).to.equal('test');
+                done();
+            });
+        });
+
+        describe('When a user logs in', () => {
+
+            var login = {
+                username: 'test',
+                password: 'password'
+            }, jwt;
+
+            before(done => {
+                server.inject({
+                    url:'/login',
+                    method:'POST',
+                    payload: login,
+                    headers: { 'Content-Type':'application/json' }
+                }, response => {
+                    statusCode = response.statusCode;
+                    jwt = response.payload;
+                    done();
+                });
+            });
+
+            it("should return a 200 status code", () => {
+                expect(statusCode).to.equal(200);
+            });
+
+            it("should return a jwt", () => {
+                expect(jwt).to.not.be.empty;
+            });
+
+            describe("When jwt is decoded", () => {
+
+                var userToken;
+
+                before(done => {
+                    jsonwebtoken.verify(jwt, key, (err, decoded) => {
+                        userToken = decoded;
+                        done();
+                    });
+                });
+
+                it("should have username inside", () => {
+                    expect(userToken.username).to.equal(login.username);
+                });
+            });
         });
     });
-
 });

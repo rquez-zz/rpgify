@@ -3,10 +3,6 @@ import mongoose from 'mongoose';
 
 mongoose.connect(config.mongodb.url);
 
-mongoose.connection.on('connected', () => {
-    console.log('Mongoose default connection open to ' + config.mongodb.url);
-});
-
 mongoose.connection.on('error', (err) => {
     console.log('Mongoose default connection error: ' + err);
 });

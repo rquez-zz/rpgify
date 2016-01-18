@@ -1,5 +1,5 @@
-import jwt from '../helpers/jwt.js';
-import User from '../models/schema.js';
+import jwt from '../helpers/jwt';
+import User from '../models/schema';
 import boom from 'boom';
 import bcrypt from 'bcrypt';
 
