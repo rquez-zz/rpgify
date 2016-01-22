@@ -11,7 +11,7 @@ export default {
 
             var token = {
                 username: req.payload.username,
-                userid: user._id
+                userid: user.userid
             };
 
             bcrypt.compare(req.payload.password, user.password, (err, isMatch) => {

@@ -16,8 +16,8 @@ describe('RPGify Integration Test', () => {
         var user = {
             username: 'test',
             password: 'password',
-            firstname: 'firstname',
-            lastname: 'lastname'
+            name: 'name',
+            email: 'email@email.com'
         }, statusCode;
 
         before(done => {
@@ -37,13 +37,13 @@ describe('RPGify Integration Test', () => {
         });
 
         it('should populate database with a user', (done) => {
-            User.findOne({ username: user.username }, (err, user) => {
-                expect(user.username).to.equal('test');
+            User.findOne({ username: user.username }, (err, foundUser) => {
+                expect(foundUser.username).to.equal('test');
                 done();
             });
         });
 
-        describe('When a user logs in', () => {
+        describe('When a user logs in successfully', () => {
 
             var login = {
                 username: 'test',
@@ -106,7 +106,7 @@ describe('RPGify Integration Test', () => {
                 });
 
                 it('should have user deleted from db', (done) => {
-                    User.where({ _id: token.userid }).count((err, count) => {
+                    User.where({ userid: token.userid }).count((err, count) => {
                         expect(count).to.equal(0);
                         done();
                     });
