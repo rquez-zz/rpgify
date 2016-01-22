@@ -5,21 +5,30 @@ import Boom from 'boom';
 export default {
     createUser: (req, reply) => {
 
-        // Hash password and insert user
-        bcrypt.genSalt(config.bcrypt.workFactor, (err, salt) => {
-            if (err) throw err;
-            bcrypt.hash(req.payload.password, salt, (err, hash) => {
-                if (err) throw err;
+        var newUser = new User({
+            username: req.payload.username,
+            email: req.payload.email,
+            name: req.payload.name,
+            password: User.hashPassword(req.payload.password)
+        });
 
-                User.create({
-                    username: req.payload.username,
-                    password: hash,
-                    firstname: req.payload.firstname,
-                    lastname: req.payload.lastname
-                }, (err, user) => {
-                    if (err) throw err;
-                    return reply().code(204);
-                });
+        User.findOne({ $or: [{'username': newUser.username}, {'email': newUser.email}] }, (err, existingUser) => {
+
+            // Existing user found
+            if (existingUser) {
+                if (newUser.username === existingUser.username) { // Username exists
+                    return reply(Boom.conflict('Username already exists', err));
+                } else { // Email Exists
+                    return reply(Boom.conflict('Email already exists', err));
+                }
+            }
+
+            // Save user into db
+            newUser.save(err => {
+                if (err)
+                    return reply(Boom.badImplementation('Error saving user to db', err));
+
+                return reply().code(204);
             });
         });
     },
