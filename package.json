@@ -28,6 +28,7 @@
     "jsonwebtoken": "^5.5.4",
     "mongodb": "^2.1.4",
     "mongoose": "^4.3.5",
+    "nodemon": "^1.8.1",
     "shortid": "^2.2.4"
   },
   "devDependencies": {
