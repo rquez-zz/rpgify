@@ -7,7 +7,6 @@ var key = fs.readFileSync(config.key.path);
 export default {
     validateToken: (request, decoded, callback) => {
         if (!decoded) {
-            // TODO: Add boom error here
             return callback(null, false, decoded);
         }
         return callback(null, true, decoded);

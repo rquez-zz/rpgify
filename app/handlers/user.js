@@ -1,8 +1,6 @@
 import User from '../models/schema';
-import bcrypt from 'bcrypt';
 import config from '../config/rpgify';
-
-var SALT_WORK_FACTOR = 10;
+import Boom from 'boom';
 
 export default {
     createUser: (req, reply) => {
@@ -29,12 +27,11 @@ export default {
     getUser: () => {},
     deleteUser: (req, reply) => {
 
-        User.remove({ _id: req.auth.credentials.userid }, (err) => {
-            // TODO: Add boom error here
-            if (err) {
-                reply(err);
-            }
-            reply().code(204);
+        User.remove({ 'username': req.auth.credentials.username }, (err) => {
+            if (err)
+                return reply(Boom.badImplementation('Error deleting user from db', err));
+
+            return reply().code(204);
         });
     }
 };
