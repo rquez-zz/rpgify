@@ -28,17 +28,40 @@ export default {
                 if (err)
                     return reply(Boom.badImplementation('Error saving user to db', err));
 
-                return reply().code(204);
+                return reply().code(201);
             });
         });
+
     },
-    updateUser: () => {},
+    updateUser: (req, reply) => {
+
+        var patch = req.payload;
+
+        for (var param in patch) {
+            if (config.patchable.user.indexOf(param) === -1)
+                return reply(Boom.badData('Patch object contains one of more invalid fields'));
+            if (param === 'password') {
+                patch.password = User.hashPassword(patch.password);
+            }
+        }
+
+        User.update({ userid: req.auth.credentials.userid }, patch, (err, res) => {
+            if (err)
+                return reply(Boom.badImplementation('Error updating user', err));
+            if (!user)
+                return reply(Boom.notFound('User not found'));
+
+            return reply().code(204);
+        });
+    },
     getUser: () => {},
     deleteUser: (req, reply) => {
 
         User.remove({ 'username': req.auth.credentials.username }, (err) => {
             if (err)
                 return reply(Boom.badImplementation('Error deleting user from db', err));
+            if (!user)
+                return reply(Boom.notFound('User not found'));
 
             return reply().code(204);
         });
