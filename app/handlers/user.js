@@ -48,13 +48,21 @@ export default {
         User.update({ userid: req.auth.credentials.userid }, patch, (err, res) => {
             if (err)
                 return reply(Boom.badImplementation('Error updating user', err));
-            if (!user)
-                return reply(Boom.notFound('User not found'));
 
             return reply().code(204);
         });
     },
-    getUser: () => {},
+    getUser: (req, reply) => {
+
+        User.findOne({ userid: req.auth.credentials.userid }, config.getable.user, (err, user) => {
+            if (err)
+                return reply(Boom.badImplementation('Error getting user from db', err));
+            if (!user)
+                return reply(Boom.notFound('User not found'));
+
+            return reply(user);
+        });
+    },
     deleteUser: (req, reply) => {
 
         User.remove({ 'username': req.auth.credentials.username }, (err) => {
