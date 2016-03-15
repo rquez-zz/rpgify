@@ -65,10 +65,8 @@ export default {
     },
     deleteUser: (req, reply) => {
 
-        User.remove({ 'username': req.auth.credentials.username }, (err) => {
+        User.findOneAndRemove({ userid: req.auth.credentials.userid }, (err) => {
             if (err)
-                return reply(Boom.badImplementation('Error deleting user from db', err));
-            if (!user)
                 return reply(Boom.notFound('User not found'));
 
             return reply().code(204);
