@@ -16,9 +16,34 @@ describe('RPGify Integration Test', () => {
         var user = {
             username: 'test',
             password: 'password',
-            firstname: 'firstname',
-            lastname: 'lastname'
+            name: 'name',
+            email: 'email@email.com'
         }, statusCode;
+
+        var login = {
+            username: 'test',
+            password: 'password'
+        }, jwt, token;
+
+        after(done => {
+            server.inject({
+                url:'/login',
+                method:'POST',
+                payload: login,
+                headers: { 'Content-Type':'application/json' }
+            }, response => {
+                statusCode = response.statusCode;
+                jwt = response.payload;
+                server.inject({
+                    url:'/user',
+                    method:'DELETE',
+                    headers: { 'Authorization':'Bearer ' + jwt }
+                }, response => {
+                    statusCode = response.statusCode;
+                    done();
+                });
+            });
+        });
 
         before(done => {
             server.inject({
@@ -32,23 +57,19 @@ describe('RPGify Integration Test', () => {
             });
         });
 
-        it("should return a 204 status code", () => {
-            expect(statusCode).to.equal(204);
+        it("should return a 201 status code", () => {
+            expect(statusCode).to.equal(201);
         });
 
         it('should populate database with a user', (done) => {
-            User.findOne({ username: user.username }, (err, user) => {
-                expect(user.username).to.equal('test');
+            User.findOne({ username: user.username }, (err, foundUser) => {
+                expect(foundUser.username).to.equal('test');
                 done();
             });
         });
 
-        describe('When a user logs in', () => {
+        describe('When a user logs in successfully', () => {
 
-            var login = {
-                username: 'test',
-                password: 'password'
-            }, jwt, token;
 
             before(done => {
                 server.inject({
@@ -86,11 +107,73 @@ describe('RPGify Integration Test', () => {
                 });
             });
 
-            describe('When a user is deleted', () => {
+            describe('When a user is retrieved', () => {
+
+                var getUser;
+
                 before(done => {
                     server.inject({
                         url:'/user',
-                        method:'DELETE',
+                        method:'GET',
+                        headers: { 'Authorization':'Bearer ' + jwt }
+                    }, response => {
+                        statusCode = response.statusCode;
+                        getUser = JSON.parse(response.payload);
+                        done();
+                    });
+                });
+
+                it("should return a 200 status code", () => {
+                    expect(statusCode).to.equal(200);
+                });
+
+                it("should return test user", () => {
+                    expect(getUser.username).to.equal(user.username);
+                    expect(getUser.email).to.equal(user.email);
+                });
+
+                describe('When user logs in again', () => {
+
+                    before(done => {
+                        server.inject({
+                            url:'/login',
+                            method:'POST',
+                            payload: login,
+                            headers: { 'Content-Type':'application/json' }
+                        }, response => {
+                            statusCode = response.statusCode;
+                            jwt = response.payload;
+                            done();
+                        });
+                    });
+
+                    it("should update user's last login date", (done) => {
+                        server.inject({
+                            url:'/user',
+                            method:'GET',
+                            headers: { 'Authorization':'Bearer ' + jwt }
+                        }, response => {
+                            statusCode = response.statusCode;
+                            var getUserLoggedIn = JSON.parse(response.payload);
+                            expect(getUserLoggedIn.lastLogin).to.not.equal(getUser.lastLogin)
+                            done();
+                        });
+                    });
+                });
+            });
+
+            describe('When a user is updated successfully', () => {
+
+                var patch = {
+                    name: 'newName',
+                    email: 'new@gmail.com'
+                };
+
+                before(done => {
+                    server.inject({
+                        url:'/user',
+                        method:'PATCH',
+                        payload: patch,
                         headers: {
                             'Content-Type':'application/json',
                             'Authorization':'Bearer ' + jwt
@@ -101,17 +184,45 @@ describe('RPGify Integration Test', () => {
                     });
                 });
 
-                it('should return a 204 status code', () => {
+                it("should return a 204 status code", () => {
                     expect(statusCode).to.equal(204);
                 });
 
-                it('should have user deleted from db', (done) => {
-                    User.where({ _id: token.userid }).count((err, count) => {
-                        expect(count).to.equal(0);
+                it("should update user in database", done => {
+                    User.find({ userid: token.userid }, (err, foundUser) => {
+                        expect(foundUser.name === patch.name);
+                        expect(foundUser.email === patch.email);
                         done();
                     });
                 });
             });
+
+            describe('When a user attempts invalid patch', () => {
+
+                var patch = {
+                    firstname: 'newName'
+                };
+
+                before(done => {
+                    server.inject({
+                        url:'/user',
+                        method:'PATCH',
+                        payload: patch,
+                        headers: {
+                            'Content-Type':'application/json',
+                            'Authorization':'Bearer ' + jwt
+                        }
+                    }, response => {
+                        statusCode = response.statusCode;
+                        done();
+                    });
+                });
+
+                it("should return a 422 status code", () => {
+                    expect(statusCode).to.equal(422);
+                });
+            });
+
         });
     });
 });

@@ -1,27 +1,30 @@
 import jwt from '../helpers/jwt';
 import User from '../models/schema';
-import boom from 'boom';
-import bcrypt from 'bcrypt';
+import Boom from 'boom';
 
 export default {
     login: (req, reply) => {
 
         User.findOne({ username: req.payload.username }, (err, user) => {
-            if (err) throw err;
+            if (err)
+                reply(Boom.badImplementation('Error finding user', err));
+
+            if (!user)
+                return reply(Boom.notFound('User not found'));
 
             var token = {
                 username: req.payload.username,
-                userid: user._id
+                userid: user.userid
             };
 
-            bcrypt.compare(req.payload.password, user.password, (err, isMatch) => {
-                if (err) throw err;
-                if (isMatch) {
-                    reply(jwt.sign(token));
-                } else {
-                    reply(boom.unauthorized('Invalid password'));
-                }
-            });
+            if (user.isValidPassword(req.payload.password)) {
+                user.update( { lastLogin: Date.now() }, (err, res) => {
+                    if (err)
+                        return reply(Boom.badImplementation('Error updating user from db', err));
+                    return reply(jwt.sign(token));
+                });
+            } else
+                return reply(Boom.unauthorized('Invalid password'));
         });
     }
 };

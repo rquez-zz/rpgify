@@ -1,40 +1,75 @@
 import User from '../models/schema';
-import bcrypt from 'bcrypt';
 import config from '../config/rpgify';
-
-var SALT_WORK_FACTOR = 10;
+import Boom from 'boom';
 
 export default {
     createUser: (req, reply) => {
 
-        // Hash password and insert user
-        bcrypt.genSalt(config.bcrypt.workFactor, (err, salt) => {
-            if (err) throw err;
-            bcrypt.hash(req.payload.password, salt, (err, hash) => {
-                if (err) throw err;
+        var newUser = new User({
+            username: req.payload.username,
+            email: req.payload.email,
+            name: req.payload.name,
+            password: User.hashPassword(req.payload.password)
+        });
 
-                User.create({
-                    username: req.payload.username,
-                    password: hash,
-                    firstname: req.payload.firstname,
-                    lastname: req.payload.lastname
-                }, (err, user) => {
-                    if (err) throw err;
-                    return reply().code(204);
-                });
+        User.findOne({ $or: [{'username': newUser.username}, {'email': newUser.email}] }, (err, existingUser) => {
+
+            // Existing user found
+            if (existingUser) {
+                if (newUser.username === existingUser.username) { // Username exists
+                    return reply(Boom.conflict('Username already exists', err));
+                } else { // Email Exists
+                    return reply(Boom.conflict('Email already exists', err));
+                }
+            }
+
+            // Save user into db
+            newUser.save(err => {
+                if (err)
+                    return reply(Boom.badImplementation('Error saving user to db', err));
+
+                return reply().code(201);
             });
         });
+
     },
-    updateUser: () => {},
-    getUser: () => {},
+    updateUser: (req, reply) => {
+
+        var patch = req.payload;
+
+        for (var param in patch) {
+            if (config.patchable.user.indexOf(param) === -1)
+                return reply(Boom.badData('Patch object contains one of more invalid fields'));
+            if (param === 'password') {
+                patch.password = User.hashPassword(patch.password);
+            }
+        }
+
+        User.update({ userid: req.auth.credentials.userid }, patch, (err, res) => {
+            if (err)
+                return reply(Boom.badImplementation('Error updating user', err));
+
+            return reply().code(204);
+        });
+    },
+    getUser: (req, reply) => {
+
+        User.findOne({ userid: req.auth.credentials.userid }, config.getable.user, (err, user) => {
+            if (err)
+                return reply(Boom.badImplementation('Error getting user from db', err));
+            if (!user)
+                return reply(Boom.notFound('User not found'));
+
+            return reply(user);
+        });
+    },
     deleteUser: (req, reply) => {
 
-        User.remove({ _id: req.auth.credentials.userid }, (err) => {
-            // TODO: Add boom error here
-            if (err) {
-                reply(err);
-            }
-            reply().code(204);
+        User.findOneAndRemove({ userid: req.auth.credentials.userid }, (err) => {
+            if (err)
+                return reply(Boom.notFound('User not found'));
+
+            return reply().code(204);
         });
     }
 };
