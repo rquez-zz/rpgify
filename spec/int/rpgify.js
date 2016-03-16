@@ -20,6 +20,31 @@ describe('RPGify Integration Test', () => {
             email: 'email@email.com'
         }, statusCode;
 
+        var login = {
+            username: 'test',
+            password: 'password'
+        }, jwt, token;
+
+        after(done => {
+            server.inject({
+                url:'/login',
+                method:'POST',
+                payload: login,
+                headers: { 'Content-Type':'application/json' }
+            }, response => {
+                statusCode = response.statusCode;
+                jwt = response.payload;
+                server.inject({
+                    url:'/user',
+                    method:'DELETE',
+                    headers: { 'Authorization':'Bearer ' + jwt }
+                }, response => {
+                    statusCode = response.statusCode;
+                    done();
+                });
+            });
+        });
+
         before(done => {
             server.inject({
                 url:'/user',
@@ -45,10 +70,6 @@ describe('RPGify Integration Test', () => {
 
         describe('When a user logs in successfully', () => {
 
-            var login = {
-                username: 'test',
-                password: 'password'
-            }, jwt, token;
 
             before(done => {
                 server.inject({
@@ -202,32 +223,6 @@ describe('RPGify Integration Test', () => {
                 });
             });
 
-            describe('When a user is deleted successfully', () => {
-                before(done => {
-                    server.inject({
-                        url:'/user',
-                        method:'DELETE',
-                        headers: {
-                            'Content-Type':'application/json',
-                            'Authorization':'Bearer ' + jwt
-                        }
-                    }, response => {
-                        statusCode = response.statusCode;
-                        done();
-                    });
-                });
-
-                it('should return a 204 status code', () => {
-                    expect(statusCode).to.equal(204);
-                });
-
-                it('should have user deleted from db', (done) => {
-                    User.where({ userid: token.userid }).count((err, count) => {
-                        expect(count).to.equal(0);
-                        done();
-                    });
-                });
-            });
         });
     });
 });
