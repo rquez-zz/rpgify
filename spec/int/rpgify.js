@@ -86,6 +86,61 @@ describe('RPGify Integration Test', () => {
                 });
             });
 
+            describe('When a user is retrieved', () => {
+
+                var getUser;
+
+                before(done => {
+                    server.inject({
+                        url:'/user',
+                        method:'GET',
+                        headers: { 'Authorization':'Bearer ' + jwt }
+                    }, response => {
+                        statusCode = response.statusCode;
+                        getUser = JSON.parse(response.payload);
+                        done();
+                    });
+                });
+
+                it("should return a 200 status code", () => {
+                    expect(statusCode).to.equal(200);
+                });
+
+                it("should return test user", () => {
+                    expect(getUser.username).to.equal(user.username);
+                    expect(getUser.email).to.equal(user.email);
+                });
+
+                describe('When user logs in again', () => {
+
+                    before(done => {
+                        server.inject({
+                            url:'/login',
+                            method:'POST',
+                            payload: login,
+                            headers: { 'Content-Type':'application/json' }
+                        }, response => {
+                            statusCode = response.statusCode;
+                            jwt = response.payload;
+                            done();
+                        });
+                    });
+
+                    it("should update user's last login date", (done) => {
+                        server.inject({
+                            url:'/user',
+                            method:'GET',
+                            headers: { 'Authorization':'Bearer ' + jwt }
+                        }, response => {
+                            statusCode = response.statusCode;
+                            var getUserLoggedIn = JSON.parse(response.payload);
+                            expect(getUserLoggedIn.lastLogin).to.not.equal(getUser.lastLogin)
+                            done();
+                        });
+                    });
+                });
+            });
+
             describe('When a user is updated successfully', () => {
 
                 var patch = {
