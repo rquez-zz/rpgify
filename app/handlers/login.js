@@ -1,5 +1,6 @@
 import jwt from '../helpers/jwt';
 import User from '../models/schema';
+
 import Boom from 'boom';
 
 export default {
