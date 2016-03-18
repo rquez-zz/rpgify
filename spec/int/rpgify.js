@@ -11,19 +11,45 @@ var key = fs.readFileSync(config.key.path);
 
 describe('RPGify Integration Test', () => {
 
-    describe('When a user registers', () => {
+    var statusCode;
+
+    describe('When user logs in with google', () => {
+
+        var authUrl;
+
+        before(done => {
+            server.inject({
+                url:'/auth',
+                method:'GET',
+            }, response => {
+                statusCode = response.statusCode;
+                authUrl = response.headers.location;
+                done();
+            });
+        });
+
+        it("should return a 302 status code", () => {
+            expect(statusCode).to.equal(302);
+        });
+
+        it('should have google auth url in location header', () => {
+            expect(authUrl).to.not.be.empty;
+        });
+    });
+
+    describe('When a user registers with email', () => {
+
+        var login = {
+            username: 'test',
+            password: 'password'
+        }, jwt;
 
         var user = {
             username: 'test',
             password: 'password',
             name: 'name',
             email: 'email@email.com'
-        }, statusCode;
-
-        var login = {
-            username: 'test',
-            password: 'password'
-        }, jwt, token;
+        };
 
         after(done => {
             server.inject({
@@ -70,6 +96,7 @@ describe('RPGify Integration Test', () => {
 
         describe('When a user logs in successfully', () => {
 
+            var token;
 
             before(done => {
                 server.inject({
@@ -155,7 +182,7 @@ describe('RPGify Integration Test', () => {
                         }, response => {
                             statusCode = response.statusCode;
                             var getUserLoggedIn = JSON.parse(response.payload);
-                            expect(getUserLoggedIn.lastLogin).to.not.equal(getUser.lastLogin)
+                            expect(getUserLoggedIn.lastLogin).to.not.equal(getUser.lastLogin);
                             done();
                         });
                     });
