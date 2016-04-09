@@ -13,7 +13,7 @@ export default [
         method: 'PATCH',
         path: '/user',
         config: {
-            handler: userHandler.updateUser 
+            handler: userHandler.updateUser
         }
     },
     {

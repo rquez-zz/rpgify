@@ -6,7 +6,7 @@ import Boom from 'boom';
 export default {
     login: (req, reply) => {
 
-        User.findOne({ username: req.payload.username }, (err, user) => {
+        User.findOne({ email: req.payload.email }, (err, user) => {
             if (err)
                 reply(Boom.badImplementation('Error finding user', err));
 
@@ -14,7 +14,7 @@ export default {
                 return reply(Boom.notFound('User not found'));
 
             var token = {
-                username: req.payload.username,
+                email: req.payload.email,
                 userid: user.userid
             };
 

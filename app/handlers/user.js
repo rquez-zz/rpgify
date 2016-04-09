@@ -6,21 +6,16 @@ export default {
     createUser: (req, reply) => {
 
         var newUser = new User({
-            username: req.payload.username,
             email: req.payload.email,
             name: req.payload.name,
             password: User.hashPassword(req.payload.password)
         });
 
-        User.findOne({ $or: [{'username': newUser.username}, {'email': newUser.email}] }, (err, existingUser) => {
+        User.findOne({'email': newUser.email}, (err, existingUser) => {
 
             // Existing user found
             if (existingUser) {
-                if (newUser.username === existingUser.username) { // Username exists
-                    return reply(Boom.conflict('Username already exists', err));
-                } else { // Email Exists
-                    return reply(Boom.conflict('Email already exists', err));
-                }
+                return reply(Boom.conflict('Email for this user already exists', err));
             }
 
             // Save user into db

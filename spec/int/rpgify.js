@@ -40,12 +40,11 @@ describe('RPGify Integration Test', () => {
     describe('When a user registers with email', () => {
 
         var login = {
-            username: 'test',
+            email: 'email@email.com',
             password: 'password'
         }, jwt;
 
         var user = {
-            username: 'test',
             password: 'password',
             name: 'name',
             email: 'email@email.com'
@@ -88,8 +87,8 @@ describe('RPGify Integration Test', () => {
         });
 
         it('should populate database with a user', (done) => {
-            User.findOne({ username: user.username }, (err, foundUser) => {
-                expect(foundUser.username).to.equal('test');
+            User.findOne({ email: user.email }, (err, foundUser) => {
+                expect(foundUser.email).to.equal(user.email);
                 done();
             });
         });
@@ -129,8 +128,8 @@ describe('RPGify Integration Test', () => {
                     });
                 });
 
-                it("should have username inside", () => {
-                    expect(token.username).to.equal(login.username);
+                it("should have email inside", () => {
+                    expect(token.email).to.equal(login.email);
                 });
             });
 
@@ -155,7 +154,6 @@ describe('RPGify Integration Test', () => {
                 });
 
                 it("should return test user", () => {
-                    expect(getUser.username).to.equal(user.username);
                     expect(getUser.email).to.equal(user.email);
                 });
 
@@ -193,7 +191,7 @@ describe('RPGify Integration Test', () => {
 
                 var patch = {
                     name: 'newName',
-                    email: 'new@gmail.com'
+                    email: 'new@email.com'
                 };
 
                 before(done => {
