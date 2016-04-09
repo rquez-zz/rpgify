@@ -9,6 +9,10 @@ For each level the user specifies the achievements required to complete that lev
 Once the achievements are accomplished they advance a level.
 For each achievement completed, experience points are gained.
 
+## Install Modules
+
+* `npm install`
+
 ## Testing
 
 * `npm run int-test`
