@@ -6,24 +6,127 @@ import User from './../../app/models/schema';
 
 import fs from 'fs';
 import mongoose from 'mongoose';
+import nock from 'nock';
 
 var key = fs.readFileSync(config.key.path);
+var tokenFixture = fs.readFileSync('./spec/fixtures/test-token.json');
+var profileFixture = fs.readFileSync('./spec/fixtures/test-profile.json');
 
 describe('RPGify Integration Test', () => {
 
-    describe('When a user registers', () => {
+    var statusCode;
+
+    describe('When user authenticates with Google', () => {
+
+        var authUrl;
+
+        before(done => {
+            server.inject({
+                url:'/auth',
+                method:'GET',
+            }, response => {
+                statusCode = response.statusCode;
+                authUrl = response.headers.location;
+                done();
+            });
+        });
+
+        it("should return a 302 status code", () => {
+            expect(statusCode).to.equal(302);
+        });
+
+        it('should have google auth url in location header', () => {
+            expect(authUrl).to.not.be.empty;
+        });
+
+        describe('When user registers with Google', () => {
+            var token = nock('https://accounts.google.com')
+                        .persist()
+                        .post('/o/oauth2/token')
+                        .reply(200, tokenFixture);
+
+            var profile = nock('https://www.googleapis.com')
+                        .get('/plus/v1/people/me')
+                        .reply(200, profileFixture);
+
+            before(done => {
+                server.inject({
+                    url:'/auth-callback?code=randomcode',
+                    method:'GET',
+                }, response => {
+                    statusCode = response.statusCode;
+                    done();
+                });
+            });
+
+            it('should return a 201', () => {
+                expect(statusCode).to.equal(201);
+            });
+
+            describe('When user logs in with Google', () => {
+
+                var jwt;
+
+                var token = nock('https://accounts.google.com')
+                            .persist()
+                            .post('/o/oauth2/token')
+                            .reply(200, tokenFixture);
+
+                var profile = nock('https://www.googleapis.com')
+                            .get('/plus/v1/people/me')
+                            .reply(200, profileFixture);
+
+                before(done => {
+                    server.inject({
+                        url:'/auth-callback?code=randomcode',
+                        method:'GET',
+                    }, response => {
+                        statusCode = response.statusCode;
+                        jwt = response.payload;
+                        done();
+                    });
+                });
+
+                it('should return a 200', () => {
+                    expect(statusCode).to.equal(200);
+                });
+
+                describe('When a Google user is deleted', () => {
+
+                    before(done => {
+                        server.inject({
+                            url:'/user',
+                            method:'DELETE',
+                            headers: {
+                                'Content-Type':'application/json',
+                                'Authorization':'Bearer ' + jwt
+                            }
+                        }, response => {
+                            statusCode = response.statusCode;
+                            done();
+                        });
+                    });
+
+                    it("should return a 204 status code", () => {
+                        expect(statusCode).to.equal(204);
+                    });
+                });
+            });
+        });
+    });
+
+    describe('When a user registers with email', () => {
+
+        var login = {
+            email: 'email@email.com',
+            password: 'password'
+        }, jwt;
 
         var user = {
-            username: 'test',
             password: 'password',
             name: 'name',
             email: 'email@email.com'
-        }, statusCode;
-
-        var login = {
-            username: 'test',
-            password: 'password'
-        }, jwt, token;
+        };
 
         after(done => {
             server.inject({
@@ -62,14 +165,15 @@ describe('RPGify Integration Test', () => {
         });
 
         it('should populate database with a user', (done) => {
-            User.findOne({ username: user.username }, (err, foundUser) => {
-                expect(foundUser.username).to.equal('test');
+            User.findOne({ email: user.email }, (err, foundUser) => {
+                expect(foundUser.email).to.equal(user.email);
                 done();
             });
         });
 
         describe('When a user logs in successfully', () => {
 
+            var token;
 
             before(done => {
                 server.inject({
@@ -102,8 +206,8 @@ describe('RPGify Integration Test', () => {
                     });
                 });
 
-                it("should have username inside", () => {
-                    expect(token.username).to.equal(login.username);
+                it("should have email inside", () => {
+                    expect(token.email).to.equal(login.email);
                 });
             });
 
@@ -128,7 +232,6 @@ describe('RPGify Integration Test', () => {
                 });
 
                 it("should return test user", () => {
-                    expect(getUser.username).to.equal(user.username);
                     expect(getUser.email).to.equal(user.email);
                 });
 
@@ -155,7 +258,7 @@ describe('RPGify Integration Test', () => {
                         }, response => {
                             statusCode = response.statusCode;
                             var getUserLoggedIn = JSON.parse(response.payload);
-                            expect(getUserLoggedIn.lastLogin).to.not.equal(getUser.lastLogin)
+                            expect(getUserLoggedIn.lastLogin).to.not.equal(getUser.lastLogin);
                             done();
                         });
                     });
@@ -166,7 +269,7 @@ describe('RPGify Integration Test', () => {
 
                 var patch = {
                     name: 'newName',
-                    email: 'new@gmail.com'
+                    email: 'new@email.com'
                 };
 
                 before(done => {
@@ -189,7 +292,7 @@ describe('RPGify Integration Test', () => {
                 });
 
                 it("should update user in database", done => {
-                    User.find({ userid: token.userid }, (err, foundUser) => {
+                    User.find({ _id: token._id }, (err, foundUser) => {
                         expect(foundUser.name === patch.name);
                         expect(foundUser.email === patch.email);
                         done();
@@ -221,6 +324,35 @@ describe('RPGify Integration Test', () => {
                 it("should return a 422 status code", () => {
                     expect(statusCode).to.equal(422);
                 });
+            });
+
+            describe('When a user is deleted', () => {
+
+                before(done => {
+                    server.inject({
+                        url:'/user',
+                        method:'DELETE',
+                        headers: {
+                            'Content-Type':'application/json',
+                            'Authorization':'Bearer ' + jwt
+                        }
+                    }, response => {
+                        statusCode = response.statusCode;
+                        done();
+                    });
+                });
+
+                it("should return a 204 status code", () => {
+                    expect(statusCode).to.equal(204);
+                });
+
+                it("should delete user in database", done => {
+                    User.find({ _id: token._id }, (err, foundUser) => {
+                        expect(!foundUser);
+                        done();
+                    });
+                });
+
             });
 
         });

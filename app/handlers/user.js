@@ -6,21 +6,16 @@ export default {
     createUser: (req, reply) => {
 
         var newUser = new User({
-            username: req.payload.username,
             email: req.payload.email,
             name: req.payload.name,
             password: User.hashPassword(req.payload.password)
         });
 
-        User.findOne({ $or: [{'username': newUser.username}, {'email': newUser.email}] }, (err, existingUser) => {
+        User.findOne({'email': newUser.email}, (err, existingUser) => {
 
             // Existing user found
             if (existingUser) {
-                if (newUser.username === existingUser.username) { // Username exists
-                    return reply(Boom.conflict('Username already exists', err));
-                } else { // Email Exists
-                    return reply(Boom.conflict('Email already exists', err));
-                }
+                return reply(Boom.conflict('Email for this user already exists', err));
             }
 
             // Save user into db
@@ -45,7 +40,7 @@ export default {
             }
         }
 
-        User.update({ userid: req.auth.credentials.userid }, patch, (err, res) => {
+        User.update({ _id: req.auth.credentials._id }, patch, (err, res) => {
             if (err)
                 return reply(Boom.badImplementation('Error updating user', err));
 
@@ -54,7 +49,7 @@ export default {
     },
     getUser: (req, reply) => {
 
-        User.findOne({ userid: req.auth.credentials.userid }, config.getable.user, (err, user) => {
+        User.findOne({ _id: req.auth.credentials._id }, config.getable.user, (err, user) => {
             if (err)
                 return reply(Boom.badImplementation('Error getting user from db', err));
             if (!user)
@@ -65,7 +60,7 @@ export default {
     },
     deleteUser: (req, reply) => {
 
-        User.findOneAndRemove({ userid: req.auth.credentials.userid }, (err) => {
+        User.findOneAndRemove({ _id: req.auth.credentials._id }, (err) => {
             if (err)
                 return reply(Boom.notFound('User not found'));
 

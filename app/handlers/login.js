@@ -1,20 +1,24 @@
 import jwt from '../helpers/jwt';
 import User from '../models/schema';
+
 import Boom from 'boom';
 
 export default {
     login: (req, reply) => {
 
-        User.findOne({ username: req.payload.username }, (err, user) => {
+        User.findOne({ email: req.payload.email }, (err, user) => {
             if (err)
                 reply(Boom.badImplementation('Error finding user', err));
 
             if (!user)
                 return reply(Boom.notFound('User not found'));
 
+            if (!user.password)
+                return reply(Boom.unauthorized('Google user must be authenticated with Google'));
+
             var token = {
-                username: req.payload.username,
-                userid: user.userid
+                email: req.payload.email,
+                _id: user._id
             };
 
             if (user.isValidPassword(req.payload.password)) {
