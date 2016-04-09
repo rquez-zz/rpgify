@@ -6,14 +6,17 @@ import User from './../../app/models/schema';
 
 import fs from 'fs';
 import mongoose from 'mongoose';
+import nock from 'nock';
 
 var key = fs.readFileSync(config.key.path);
+var tokenFixture = fs.readFileSync('./spec/fixtures/test-token.json');
+var profileFixture = fs.readFileSync('./spec/fixtures/test-profile.json');
 
 describe('RPGify Integration Test', () => {
 
     var statusCode;
 
-    describe('When user logs in with google', () => {
+    describe('When user authenticates with Google', () => {
 
         var authUrl;
 
@@ -34,6 +37,81 @@ describe('RPGify Integration Test', () => {
 
         it('should have google auth url in location header', () => {
             expect(authUrl).to.not.be.empty;
+        });
+
+        describe('When user registers with Google', () => {
+            var token = nock('https://accounts.google.com')
+                        .persist()
+                        .post('/o/oauth2/token')
+                        .reply(200, tokenFixture);
+
+            var profile = nock('https://www.googleapis.com')
+                        .get('/plus/v1/people/me')
+                        .reply(200, profileFixture);
+
+            before(done => {
+                server.inject({
+                    url:'/auth-callback?code=randomcode',
+                    method:'GET',
+                }, response => {
+                    statusCode = response.statusCode;
+                    done();
+                });
+            });
+
+            it('should return a 201', () => {
+                expect(statusCode).to.equal(201);
+            });
+
+            describe('When user logs in with Google', () => {
+
+                var jwt;
+
+                var token = nock('https://accounts.google.com')
+                            .persist()
+                            .post('/o/oauth2/token')
+                            .reply(200, tokenFixture);
+
+                var profile = nock('https://www.googleapis.com')
+                            .get('/plus/v1/people/me')
+                            .reply(200, profileFixture);
+
+                before(done => {
+                    server.inject({
+                        url:'/auth-callback?code=randomcode',
+                        method:'GET',
+                    }, response => {
+                        statusCode = response.statusCode;
+                        jwt = response.payload;
+                        done();
+                    });
+                });
+
+                it('should return a 200', () => {
+                    expect(statusCode).to.equal(200);
+                });
+
+                describe('When a Google user is deleted', () => {
+
+                    before(done => {
+                        server.inject({
+                            url:'/user',
+                            method:'DELETE',
+                            headers: {
+                                'Content-Type':'application/json',
+                                'Authorization':'Bearer ' + jwt
+                            }
+                        }, response => {
+                            statusCode = response.statusCode;
+                            done();
+                        });
+                    });
+
+                    it("should return a 204 status code", () => {
+                        expect(statusCode).to.equal(204);
+                    });
+                });
+            });
         });
     });
 
