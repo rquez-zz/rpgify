@@ -13,6 +13,9 @@ export default {
             if (!user)
                 return reply(Boom.notFound('User not found'));
 
+            if (!user.password)
+                return reply(Boom.unauthorized('Google user must be authenticated with Google'));
+
             var token = {
                 email: req.payload.email,
                 _id: user._id
