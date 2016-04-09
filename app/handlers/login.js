@@ -15,7 +15,7 @@ export default {
 
             var token = {
                 email: req.payload.email,
-                userid: user.userid
+                _id: user._id
             };
 
             if (user.isValidPassword(req.payload.password)) {

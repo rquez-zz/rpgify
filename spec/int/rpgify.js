@@ -214,7 +214,7 @@ describe('RPGify Integration Test', () => {
                 });
 
                 it("should update user in database", done => {
-                    User.find({ userid: token.userid }, (err, foundUser) => {
+                    User.find({ _id: token._id }, (err, foundUser) => {
                         expect(foundUser.name === patch.name);
                         expect(foundUser.email === patch.email);
                         done();
@@ -269,7 +269,7 @@ describe('RPGify Integration Test', () => {
                 });
 
                 it("should delete user in database", done => {
-                    User.find({ userid: token.userid }, (err, foundUser) => {
+                    User.find({ _id: token._id }, (err, foundUser) => {
                         expect(!foundUser);
                         done();
                     });
