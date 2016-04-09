@@ -248,6 +248,35 @@ describe('RPGify Integration Test', () => {
                 });
             });
 
+            describe('When a user is deleted', () => {
+
+                before(done => {
+                    server.inject({
+                        url:'/user',
+                        method:'DELETE',
+                        headers: {
+                            'Content-Type':'application/json',
+                            'Authorization':'Bearer ' + jwt
+                        }
+                    }, response => {
+                        statusCode = response.statusCode;
+                        done();
+                    });
+                });
+
+                it("should return a 204 status code", () => {
+                    expect(statusCode).to.equal(204);
+                });
+
+                it("should delete user in database", done => {
+                    User.find({ userid: token.userid }, (err, foundUser) => {
+                        expect(!foundUser);
+                        done();
+                    });
+                });
+
+            });
+
         });
     });
 });
