@@ -4,8 +4,8 @@ module.exports = [
     {
         method: 'GET',
         path: '/auth',
+        handler: auth.googleAuth,
         config: {
-            handler: authHandler.googleAuth,
             auth: false
         }
     }

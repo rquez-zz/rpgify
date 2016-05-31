@@ -4,31 +4,25 @@ module.exports = [
     {
         method: 'POST',
         path: '/user',
+        handler: userHandler.createUser,
         config: {
-            handler: userHandler.createUser,
             auth: false
         }
     },
     {
         method: 'PATCH',
         path: '/user',
-        config: {
-            handler: userHandler.updateUser
-        }
+        handler: userHandler.updateUser
     },
     {
         method: 'GET',
         path: '/user',
-        config: {
-            handler: userHandler.getUser
-        }
+        handler: userHandler.getUser
     },
     {
         method: 'DELETE',
         path: '/user',
-        config: {
-            handler: userHandler.deleteUser
-        }
+        handler: userHandler.deleteUser
     }
 ];
 
