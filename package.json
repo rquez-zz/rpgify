@@ -7,9 +7,8 @@
     "doc": "doc"
   },
   "scripts": {
-    "start": "nodemon --exec babel-node --stage 0 -- server.js",
-    "unit-test": "mocha --compilers js:babel/register spec/unit/*.js",
-    "int-test": "mocha --compilers js:babel/register spec/int/*.js"
+    "start": "nodemon",
+    "test": "mocha spec/int/*.js"
   },
   "repository": {
     "type": "git",
@@ -17,9 +16,7 @@
   },
   "author": "",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/rquez/rpgify#readme",
   "dependencies": {
-    "babel": "^5.8.3",
     "bcrypt": "^0.8.5",
     "boom": "^3.1.1",
     "hapi": "^12.1.0",
