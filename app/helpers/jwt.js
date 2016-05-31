@@ -1,10 +1,11 @@
-import jwt from 'jsonwebtoken';
-import fs from 'fs';
-import config from '../config/rpgify';
+var config = require('../config/rpgify');
 
-var key = fs.readFileSync(config.key.path);
+var jwt = require('jsonwebtoken');
+var fs = require('fs');
 
-export default {
+var key = fs.readFileSync('privateKey');
+
+module.exports = {
     validateToken: (request, decoded, callback) => {
         if (!decoded) {
             return callback(null, false, decoded);

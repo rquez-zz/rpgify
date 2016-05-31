@@ -1,9 +1,9 @@
-import jwt from '../helpers/jwt';
-import User from '../models/schema';
+var User = require('../models/schema');
+var jwt = require('../helpers/jwt');
 
-import Boom from 'boom';
+var Boom = require('boom');
 
-export default {
+module.exports = {
     login: (req, reply) => {
 
         User.findOne({ email: req.payload.email }, (err, user) => {

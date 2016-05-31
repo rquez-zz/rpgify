@@ -1,6 +1,6 @@
-import userHandler from '../handlers/user';
+var userHandler = require('../handlers/user');
 
-export default [
+module.exports = [
     {
         method: 'POST',
         path: '/user',

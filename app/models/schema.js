@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
+var mongoose = require('mongoose');
+var bcrypt = require('bcrypt');
 
 var SALT_WORK_FACTOR = 10;
 
@@ -37,4 +37,4 @@ UserSchema.methods.isValidPassword = function(password) {
     return bcrypt.compareSync(password, this.password);
 };
 
-export default mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', UserSchema);

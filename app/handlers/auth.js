@@ -1,16 +1,16 @@
-import server from '../../server';
-import User from '../models/schema';
-import jwt from '../helpers/jwt';
+var User = require('../models/schema');
 
-import Boom from 'boom';
+var Boom = require('boom');
 
-export default {
+module.exports = {
     googleAuth: (req, reply) => {
-        var authUrl = server.generate_google_oauth2_url();
-        reply().redirect(authUrl);
+            var server = require('../../server');
+            var authUrl = server.generate_google_oauth2_url();
+            reply().redirect(authUrl);
     },
     authHandler: (req, reply, tokens, profile) => {
 
+        var jwt = require('../helpers/jwt');
         var email = profile.emails[0].value;
 
         User.findOne({'email': email}, (err, existingUser) => {

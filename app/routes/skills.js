@@ -1,6 +1,6 @@
-import skillsHandler from '../handlers/skills';
+var skillsHandler = require('../handlers/skills');
 
-export default [
+module.exports = [
     {
         method: 'GET',
         path: '/skills',

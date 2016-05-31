@@ -1,6 +1,6 @@
-import authHandler from '../handlers/auth';
+var auth = require('../handlers/auth');
 
-export default [
+module.exports = [
     {
         method: 'GET',
         path: '/auth',

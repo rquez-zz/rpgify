@@ -1,5 +1,5 @@
 // TODO: Implement skillsHandler
-export default {
+module.exports = {
     createSkill: () => {},
     updateSkill: () => {},
     getSkills: () => {},

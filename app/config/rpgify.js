@@ -1,6 +1,6 @@
 var env = process.env;
 
-export default {
+module.exports = {
     connection: { port: env.PORT || 3000 },
     baseUrl: env.BASE_URL || 'http://localhost:3000',
     key: { path: env.PRIVATEKEY || 'privateKey' },
@@ -16,6 +16,7 @@ export default {
     },
     googleOpts: {
         REDIRECT_URL: '/auth-callback',
+        handler: require('../handlers/auth').authHandler,
         scope: 'https://www.googleapis.com/auth/plus.profile.emails.read'
     }
 };

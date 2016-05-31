@@ -1,8 +1,9 @@
-import User from '../models/schema';
-import config from '../config/rpgify';
-import Boom from 'boom';
+var User = require('../models/schema');
+var config = require('../config/rpgify');
 
-export default {
+var Boom = require('boom');
+
+module.exports = {
     createUser: (req, reply) => {
 
         var newUser = new User({
