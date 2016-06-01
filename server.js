@@ -5,10 +5,10 @@ var jwt = require('./app/helpers/jwt');
 var config = require('./app/config/rpgify');
 var db = require('./app/helpers/db');
 
-var server = new Hapi.Server();
+const server = new Hapi.Server();
 
-var key = fs.readFileSync(config.key.path);
-var apiKeyJson = JSON.parse(fs.readFileSync(config.apiKey.path));
+const key = fs.readFileSync(config.key.path);
+const apiKeyJson = JSON.parse(fs.readFileSync(config.apiKey.path));
 
 process.env.GOOGLE_CLIENT_ID = apiKeyJson.web.client_id;
 process.env.GOOGLE_CLIENT_SECRET = apiKeyJson.web.client_secret;

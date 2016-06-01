@@ -3,10 +3,11 @@ var config = require('../config/rpgify');
 var jwt = require('jsonwebtoken');
 var fs = require('fs');
 
-var key = fs.readFileSync('privateKey');
+const key = fs.readFileSync('privateKey');
 
-module.exports = {
+var jwtHelper = {
     validateToken: (request, decoded, callback) => {
+
         if (!decoded) {
             return callback(null, false, decoded);
         }
@@ -16,3 +17,5 @@ module.exports = {
         return jwt.sign(token, key, config.jwt);
     }
 };
+
+module.exports = jwtHelper;
