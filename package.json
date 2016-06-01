@@ -26,13 +26,11 @@
     "jsonwebtoken": "^7.0.0",
     "mongodb": "^2.1.4",
     "mongoose": "^4.3.5",
-    "nodemon": "^1.8.1",
-    "shortid": "^2.2.4"
+    "nodemon": "^1.8.1"
   },
   "devDependencies": {
     "blipp": "^2.3.0",
     "chai": "^3.2.0",
-    "chai-as-promised": "^5.1.0",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
     "nock": "^8.0.0"
