@@ -1,33 +1,25 @@
-import skillsHandler from '../handlers/skills';
+var skillsHandler = require('../handlers/skills');
 
-export default [
+module.exports = [
     {
         method: 'GET',
         path: '/skills',
-        config: {
-            handler: skillsHandler.getSkills
-        }
+        handler: skillsHandler.getSkills
     },
     {
 
         method: 'POST',
         path: '/skills',
-        config: {
-            handler: skillsHandler.createSkill
-        }
+        handler: skillsHandler.createSkill
     },
     {
         method: 'PATCH',
         path: '/skills/{skillname}',
-        config: {
-            handler: skillsHandler.updateSkill
-        }
+        handler: skillsHandler.updateSkill
     },
     {
         method: 'DELETE',
         path: '/skills/{skillname}',
-        config: {
-            handler: skillsHandler.deleteSkill
-        }
+        handler: skillsHandler.deleteSkill
     },
 ];

@@ -1,16 +1,17 @@
-import { expect } from 'chai';
-import server from './../../server';
-import jsonwebtoken from 'jsonwebtoken';
-import config from './../../app/config/rpgify';
-import User from './../../app/models/schema';
+var server = require('./../../server');
 
-import fs from 'fs';
-import mongoose from 'mongoose';
-import nock from 'nock';
+var expect = require('chai').expect;
+var jsonwebtoken = require('jsonwebtoken');
+var fs = require('fs');
+var mongoose = require('mongoose');
+var nock = require('nock');
 
-var key = fs.readFileSync(config.key.path);
-var tokenFixture = fs.readFileSync('./spec/fixtures/test-token.json');
-var profileFixture = fs.readFileSync('./spec/fixtures/test-profile.json');
+var config = require('./../../app/config/rpgify');
+var User = require('./../../app/models/schema');
+
+const key = fs.readFileSync(config.key.path);
+const tokenFixture = fs.readFileSync('./spec/fixtures/test-token.json');
+const profileFixture = fs.readFileSync('./spec/fixtures/test-profile.json');
 
 describe('RPGify Integration Test', () => {
 

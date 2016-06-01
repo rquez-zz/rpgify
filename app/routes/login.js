@@ -1,11 +1,11 @@
-import loginHandler from '../handlers/login';
+var loginHandler = require('../handlers/login');
 
-export default [
+module.exports = [
     {
         method: 'POST',
         path: '/login',
+        handler: loginHandler.login,
         config: {
-            handler: loginHandler.login,
             auth: false
         }
     }

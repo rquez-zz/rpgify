@@ -1,7 +1,5 @@
-import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
-
-var SALT_WORK_FACTOR = 10;
+var mongoose = require('mongoose');
+var bcrypt = require('bcrypt');
 
 var UserSchema = mongoose.Schema({
     password: { type: String },
@@ -30,11 +28,12 @@ var UserSchema = mongoose.Schema({
 });
 
 UserSchema.statics.hashPassword = function(password) {
-    return bcrypt.hashSync(password, SALT_WORK_FACTOR);
+    var config = require('../config/rpgify');
+    return bcrypt.hashSync(password, config.bcrypt.workFactor);
 };
 
 UserSchema.methods.isValidPassword = function(password) {
     return bcrypt.compareSync(password, this.password);
 };
 
-export default mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', UserSchema);

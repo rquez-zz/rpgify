@@ -1,5 +1,6 @@
-import config from '../config/rpgify';
-import mongoose from 'mongoose';
+var config = require('../config/rpgify');
+
+var mongoose = require('mongoose');
 
 mongoose.connect(config.mongodb.url);
 

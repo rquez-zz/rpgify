@@ -1,13 +1,25 @@
 var env = process.env;
 
-export default {
-    connection: { port: env.PORT || 3000 },
+var config = {
+    connection: {
+        port: env.PORT || 3000
+    },
     baseUrl: env.BASE_URL || 'http://localhost:3000',
-    key: { path: env.PRIVATEKEY || 'privateKey' },
-    apiKey: { path: env.APIKEY || 'googleApiKey.json'},
-    jwt: { issuer: 'rpgify' },
-    mongodb: { url:  'mongodb://localhost/rpgify' },
-    bcrypt: { workFactor: env.WORK_FACTOR || 10 },
+    key: {
+        path: env.PRIVATEKEY || 'privateKey'
+    },
+    apiKey: {
+        path: env.APIKEY || 'googleApiKey.json'
+    },
+    jwt: {
+        issuer: 'rpgify'
+    },
+    mongodb: {
+        url:  'mongodb://localhost/rpgify'
+    },
+    bcrypt: {
+        workFactor: env.WORK_FACTOR || 10
+    },
     patchable: {
         user: ['username', 'password', 'email', 'name']
     },
@@ -16,6 +28,9 @@ export default {
     },
     googleOpts: {
         REDIRECT_URL: '/auth-callback',
+        handler: require('../handlers/auth').authHandler,
         scope: 'https://www.googleapis.com/auth/plus.profile.emails.read'
     }
 };
+
+module.exports = config;

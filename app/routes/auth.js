@@ -1,11 +1,11 @@
-import authHandler from '../handlers/auth';
+var auth = require('../handlers/auth');
 
-export default [
+module.exports = [
     {
         method: 'GET',
         path: '/auth',
+        handler: auth.googleAuth,
         config: {
-            handler: authHandler.googleAuth,
             auth: false
         }
     }

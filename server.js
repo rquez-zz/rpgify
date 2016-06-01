@@ -1,21 +1,14 @@
-import Hapi from 'hapi';
-import config from './app/config/rpgify';
-import jwt from './app/helpers/jwt';
-import db from './app/helpers/db';
-import auth from './app/handlers/auth';
+var Hapi = require('hapi');
+var fs = require('fs');
 
-import fs from 'fs';
-import blipp from 'blipp';
-import router from 'hapi-router';
-import hapiAuthJwt from 'hapi-auth-jwt';
-import hapiAuthGoogle from 'hapi-auth-google';
+var jwt = require('./app/helpers/jwt');
+var config = require('./app/config/rpgify');
+var db = require('./app/helpers/db');
 
-var server = new Hapi.Server();
+const server = new Hapi.Server();
 
-var key = fs.readFileSync(config.key.path);
-
-var apiKey = fs.readFileSync(config.apiKey.path);
-var apiKeyJson = JSON.parse(apiKey);
+const key = fs.readFileSync(config.key.path);
+const apiKeyJson = JSON.parse(fs.readFileSync(config.apiKey.path));
 
 process.env.GOOGLE_CLIENT_ID = apiKeyJson.web.client_id;
 process.env.GOOGLE_CLIENT_SECRET = apiKeyJson.web.client_secret;
@@ -24,23 +17,21 @@ process.env.PORT = config.connection.port;
 
 server.connection(config.connection);
 
-config.googleOpts.handler = auth.authHandler;
-
 server.register([{
-    register: hapiAuthGoogle,
+    register: require('hapi-auth-google'),
     options: config.googleOpts
 },{
-    register: blipp,
+    register: require('blipp'),
     options: {
         showAuth: true
     }
 }, {
-    register: router,
+    register: require('hapi-router'),
     options: {
         routes: './app/routes/*.js'
     }
 }, {
-    register: hapiAuthJwt,
+    register: require('hapi-auth-jwt'),
 }], (err) => {
     if (err) {
         console.log('Error registering hapi plugins');
@@ -56,4 +47,4 @@ server.start(() => {
     console.log('Server running at: ' + config.connection.port);
 });
 
-export default server;
+module.exports = server;
