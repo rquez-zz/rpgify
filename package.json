@@ -25,6 +25,7 @@
     "hapi-router": "^3.0.1",
     "hapi-swagger": "^6.0.0",
     "inert": "^4.0.0",
+    "joi": "^8.4.0",
     "jsonwebtoken": "^7.0.0",
     "mongodb": "^2.1.4",
     "mongoose": "^4.3.5",
