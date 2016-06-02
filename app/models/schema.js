@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
-var bcrypt = require('bcrypt');
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
-var UserSchema = mongoose.Schema({
+const UserSchema = mongoose.Schema({
     password: { type: String },
     email: { type: String, required: true, unique: true },
     name: { type: String, required: true },
@@ -28,7 +28,7 @@ var UserSchema = mongoose.Schema({
 });
 
 UserSchema.statics.hashPassword = function(password) {
-    var config = require('../config/rpgify');
+    const config = require('../config/rpgify');
     return bcrypt.hashSync(password, config.bcrypt.workFactor);
 };
 

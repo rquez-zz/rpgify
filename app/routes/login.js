@@ -1,4 +1,4 @@
-var loginHandler = require('../handlers/login');
+const loginHandler = require('../handlers/login');
 
 module.exports = [
     {

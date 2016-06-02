@@ -1,6 +1,6 @@
 var env = process.env;
 
-var config = {
+const config = {
     connection: {
         port: env.PORT || 3000
     },

@@ -1,9 +1,9 @@
-var User = require('../models/schema');
-var config = require('../config/rpgify');
+const User = require('../models/schema');
+const config = require('../config/rpgify');
 
-var Boom = require('boom');
+const Boom = require('boom');
 
-var user = {
+const user = {
     createUser: (req, reply) => {
 
         var newUser = new User({

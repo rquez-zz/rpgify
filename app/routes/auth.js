@@ -1,4 +1,4 @@
-var auth = require('../handlers/auth');
+const auth = require('../handlers/auth');
 
 module.exports = [
     {

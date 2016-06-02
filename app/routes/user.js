@@ -1,4 +1,4 @@
-var userHandler = require('../handlers/user');
+const userHandler = require('../handlers/user');
 
 module.exports = [
     {

@@ -1,6 +1,6 @@
-var config = require('../config/rpgify');
+const config = require('../config/rpgify');
 
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 mongoose.connect(config.mongodb.url);
 

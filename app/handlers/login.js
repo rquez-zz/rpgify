@@ -1,9 +1,9 @@
-var User = require('../models/schema');
-var jwtHelper = require('../helpers/jwt');
+const User = require('../models/schema');
+const jwtHelper = require('../helpers/jwt');
 
-var Boom = require('boom');
+const Boom = require('boom');
 
-var login = {
+const login = {
     login: (req, reply) => {
 
         User.findOne({ email: req.payload.email }, (err, user) => {

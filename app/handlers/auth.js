@@ -1,14 +1,14 @@
-var User = require('../models/schema');
+const User = require('../models/schema');
 
-var Boom = require('boom');
+const Boom = require('boom');
 
-var auth = {
+const auth = {
     googleAuth: (req, reply) => {
-        var authUrl = require('../../server').generate_google_oauth2_url();
+        const authUrl = require('../../server').generate_google_oauth2_url();
         reply().redirect(authUrl);
     },
     authHandler: (req, reply, tokens, profile) => {
-        var jwt = require('../helpers/jwt');
+        const jwt = require('../helpers/jwt');
         var email = profile.emails[0].value;
 
         User.findOne({'email': email}, (err, existingUser) => {
