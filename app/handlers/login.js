@@ -16,7 +16,7 @@ const login = {
             }
 
             if (!user.password) {
-                return reply(Boom.unauthorized('Google user must be authenticated with Google'));
+                return reply(Boom.conflict('No password for user. Must authenticate with Google.'));
             }
 
             var token = {
