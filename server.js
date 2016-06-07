@@ -37,8 +37,8 @@ server.register([{
         console.log('Error registering hapi plugins');
         throw err;
     }
-    server.auth.strategy('token', 'jwt', 'required', {
-        validateFunc: jwt.validateToken,
+    server.auth.strategy('jwt', 'jwt', 'required', {
+        validateFunc: jwtHelper.validateToken,
         key: key
     });
 });

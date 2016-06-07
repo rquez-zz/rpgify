@@ -31,7 +31,7 @@ const login = {
                     if (err) {
                         return reply(Boom.badImplementation('Error updating user from db', err));
                     }
-                    return reply(jwtHelper.sign(token));
+                    return reply({ jwt: jwtHelper.sign(token) });
                 });
             } else {
                 return reply(Boom.unauthorized('Invalid password'));

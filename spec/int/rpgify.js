@@ -83,7 +83,7 @@ describe('RPGify Integration Test', () => {
                         method:'GET',
                     }, response => {
                         statusCode = response.statusCode;
-                        jwt = response.payload;
+                        jwt = JSON.parse(response.payload).jwt;
                         done();
                     });
                 });
@@ -137,7 +137,7 @@ describe('RPGify Integration Test', () => {
                 headers: { 'Content-Type':'application/json' }
             }, response => {
                 statusCode = response.statusCode;
-                jwt = response.payload;
+                jwt = JSON.parse(response.payload).jwt;
                 server.inject({
                     url:'/user',
                     method:'DELETE',
@@ -184,7 +184,7 @@ describe('RPGify Integration Test', () => {
                     headers: { 'Content-Type':'application/json' }
                 }, response => {
                     statusCode = response.statusCode;
-                    jwt = response.payload;
+                    jwt = JSON.parse(response.payload).jwt;
                     done();
                 });
             });
@@ -246,7 +246,7 @@ describe('RPGify Integration Test', () => {
                             headers: { 'Content-Type':'application/json' }
                         }, response => {
                             statusCode = response.statusCode;
-                            jwt = response.payload;
+                            jwt = JSON.parse(response.payload).jwt;
                             done();
                         });
                     });
