@@ -21,10 +21,10 @@ const config = {
         workFactor: env.WORK_FACTOR || 10
     },
     patchable: {
-        user: ['username', 'password', 'email', 'name']
+        user: ['password', 'email', 'name']
     },
     getable: {
-        user: 'username name email skills userExp signup lastLogin -_id'
+        user: 'name email skills userExp signup lastLogin -_id'
     },
     googleOpts: {
         REDIRECT_URL: '/auth-callback',
