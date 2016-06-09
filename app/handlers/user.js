@@ -24,7 +24,13 @@ const user = {
                     return reply(Boom.badImplementation('Error saving user to db', err));
                 }
 
-                return reply().code(201);
+                var createdUser = {
+                    email: newUser.email,
+                    name: newUser.name,
+                    signup: newUser.signup
+                };
+
+                return reply(createdUser).code(201).header('location', '/user');
             });
         });
 
