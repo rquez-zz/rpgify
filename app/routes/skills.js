@@ -1,4 +1,4 @@
-var skillsHandler = require('../handlers/skills');
+const skillsHandler = require('../handlers/skills');
 
 module.exports = [
     {

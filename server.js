@@ -1,9 +1,10 @@
-var Hapi = require('hapi');
-var fs = require('fs');
+const Hapi = require('hapi');
+const fs = require('fs');
 
-var jwt = require('./app/helpers/jwt');
-var config = require('./app/config/rpgify');
-var db = require('./app/helpers/db');
+const jwtHelper = require('./app/helpers/jwt');
+const config = require('./app/config/rpgify');
+const swagger = require('./app/config/swagger');
+const db = require('./app/helpers/db');
 
 const server = new Hapi.Server();
 
@@ -17,10 +18,18 @@ process.env.PORT = config.connection.port;
 
 server.connection(config.connection);
 
-server.register([{
+server.register([
+{
+    register: require('vision')
+}, {
+    register: require('inert')
+}, {
+    register: require('hapi-swagger'),
+    options: swagger.options
+}, {
     register: require('hapi-auth-google'),
     options: config.googleOpts
-},{
+}, {
     register: require('blipp'),
     options: {
         showAuth: true
@@ -37,8 +46,8 @@ server.register([{
         console.log('Error registering hapi plugins');
         throw err;
     }
-    server.auth.strategy('token', 'jwt', 'required', {
-        validateFunc: jwt.validateToken,
+    server.auth.strategy('jwt', 'jwt', 'required', {
+        validateFunc: jwtHelper.validateToken,
         key: key
     });
 });

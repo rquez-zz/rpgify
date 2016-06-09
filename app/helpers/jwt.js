@@ -1,11 +1,11 @@
-var config = require('../config/rpgify');
+const config = require('../config/rpgify');
 
-var jwt = require('jsonwebtoken');
-var fs = require('fs');
+const jwt = require('jsonwebtoken');
+const fs = require('fs');
 
 const key = fs.readFileSync('privateKey');
 
-var jwtHelper = {
+const jwtHelper = {
     validateToken: (request, decoded, callback) => {
 
         if (!decoded) {

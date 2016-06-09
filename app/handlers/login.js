@@ -1,9 +1,9 @@
-var User = require('../models/schema');
-var jwtHelper = require('../helpers/jwt');
+const User = require('../models/schema');
+const jwtHelper = require('../helpers/jwt');
 
-var Boom = require('boom');
+const Boom = require('boom');
 
-var login = {
+const login = {
     login: (req, reply) => {
 
         User.findOne({ email: req.payload.email }, (err, user) => {
@@ -16,7 +16,7 @@ var login = {
             }
 
             if (!user.password) {
-                return reply(Boom.unauthorized('Google user must be authenticated with Google'));
+                return reply(Boom.conflict('No password for user. Must authenticate with Google.'));
             }
 
             var token = {
@@ -31,7 +31,7 @@ var login = {
                     if (err) {
                         return reply(Boom.badImplementation('Error updating user from db', err));
                     }
-                    return reply(jwtHelper.sign(token));
+                    return reply({ jwt: jwtHelper.sign(token) });
                 });
             } else {
                 return reply(Boom.unauthorized('Invalid password'));

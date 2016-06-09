@@ -1,6 +1,6 @@
 var env = process.env;
 
-var config = {
+const config = {
     connection: {
         port: env.PORT || 3000
     },
@@ -20,11 +20,8 @@ var config = {
     bcrypt: {
         workFactor: env.WORK_FACTOR || 10
     },
-    patchable: {
-        user: ['username', 'password', 'email', 'name']
-    },
     getable: {
-        user: 'username name email skills userExp signup lastLogin -_id'
+        user: 'name email userExp signup lastLogin -_id'
     },
     googleOpts: {
         REDIRECT_URL: '/auth-callback',

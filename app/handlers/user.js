@@ -1,9 +1,9 @@
-var User = require('../models/schema');
-var config = require('../config/rpgify');
+const User = require('../models/schema');
+const config = require('../config/rpgify');
 
-var Boom = require('boom');
+const Boom = require('boom');
 
-var user = {
+const user = {
     createUser: (req, reply) => {
 
         var newUser = new User({
@@ -24,28 +24,26 @@ var user = {
                     return reply(Boom.badImplementation('Error saving user to db', err));
                 }
 
-                return reply().code(201);
+                var createdUser = {
+                    email: newUser.email,
+                    name: newUser.name,
+                    signup: newUser.signup
+                };
+
+                return reply(createdUser).code(201).header('location', '/user');
             });
         });
 
     },
     updateUser: (req, reply) => {
 
-        var patch = req.payload;
+        var put = req.payload;
 
-        for (var param in patch) {
+        User.findOneAndUpdate({ _id: req.auth.credentials._id }, put, (err, user) => {
 
-            if (config.patchable.user.indexOf(param) === -1) {
-                return reply(Boom.badData('Patch object contains one of more invalid fields'));
+            if (!user) {
+                return reply(Boom.notFound('User not found'));
             }
-
-            if (param === 'password') {
-                patch.password = User.hashPassword(patch.password);
-            }
-        }
-
-        User.update({ _id: req.auth.credentials._id }, patch, (err, res) => {
-
             if (err) {
                 return reply(Boom.badImplementation('Error updating user', err));
             }
@@ -70,10 +68,13 @@ var user = {
     },
     deleteUser: (req, reply) => {
 
-        User.findOneAndRemove({ _id: req.auth.credentials._id }, (err) => {
+        User.findOneAndRemove({ _id: req.auth.credentials._id }, (err, user) => {
 
-            if (err) {
+            if (!user) {
                 return reply(Boom.notFound('User not found'));
+            }
+            if (err) {
+                return reply(Boom.badImplementation('Error deleting user from db', err));
             }
 
             return reply().code(204);
