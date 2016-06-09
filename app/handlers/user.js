@@ -31,20 +31,9 @@ const user = {
     },
     updateUser: (req, reply) => {
 
-        var patch = req.payload;
+        var put = req.payload;
 
-        for (var param in patch) {
-
-            if (config.patchable.user.indexOf(param) === -1) {
-                return reply(Boom.badData('Patch object contains one of more invalid fields'));
-            }
-
-            if (param === 'password') {
-                patch.password = User.hashPassword(patch.password);
-            }
-        }
-
-        User.update({ _id: req.auth.credentials._id }, patch, (err, res) => {
+        User.update({ _id: req.auth.credentials._id }, put, (err, res) => {
 
             if (err) {
                 return reply(Boom.badImplementation('Error updating user', err));

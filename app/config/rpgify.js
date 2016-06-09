@@ -20,9 +20,6 @@ const config = {
     bcrypt: {
         workFactor: env.WORK_FACTOR || 10
     },
-    patchable: {
-        user: ['password', 'email', 'name']
-    },
     getable: {
         user: 'name email skills userExp signup lastLogin -_id'
     },

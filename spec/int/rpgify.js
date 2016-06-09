@@ -149,6 +149,8 @@ describe('RPGify Integration Test', () => {
             });
         });
 
+        var createdUser, location;
+
         before(done => {
             server.inject({
                 url:'/user',
@@ -157,12 +159,23 @@ describe('RPGify Integration Test', () => {
                 headers: { 'Content-Type':'application/json' }
             }, response => {
                 statusCode = response.statusCode;
+                createdUser = JSON.parse(response.payload);
+                location = response.headers.location;
                 done();
             });
         });
 
         it("should return a 201 status code", () => {
             expect(statusCode).to.equal(201);
+        });
+
+        it('should have a location header pointing to /user', () => {
+            expect(location).to.equal('/user');
+        });
+
+        it('should return the created user', () => {
+            expect(createdUser.name).to.equal(user.name);
+            expect(createdUser.email).to.equal(user.email);
         });
 
         it('should populate database with a user', (done) => {
@@ -268,7 +281,7 @@ describe('RPGify Integration Test', () => {
 
             describe('When a user is updated successfully', () => {
 
-                var patch = {
+                var put = {
                     name: 'newName',
                     email: 'new@email.com'
                 };
@@ -276,8 +289,8 @@ describe('RPGify Integration Test', () => {
                 before(done => {
                     server.inject({
                         url:'/user',
-                        method:'PATCH',
-                        payload: patch,
+                        method:'PUT',
+                        payload: put,
                         headers: {
                             'Content-Type':'application/json',
                             'Authorization':'Bearer ' + jwt
@@ -294,24 +307,24 @@ describe('RPGify Integration Test', () => {
 
                 it("should update user in database", done => {
                     User.find({ _id: token._id }, (err, foundUser) => {
-                        expect(foundUser.name === patch.name);
-                        expect(foundUser.email === patch.email);
+                        expect(foundUser.name === put.name);
+                        expect(foundUser.email === put.email);
                         done();
                     });
                 });
             });
 
-            describe('When a user attempts invalid patch', () => {
+            describe('When a user attempts invalid update', () => {
 
-                var patch = {
+                var put = {
                     firstname: 'newName'
                 };
 
                 before(done => {
                     server.inject({
                         url:'/user',
-                        method:'PATCH',
-                        payload: patch,
+                        method:'PUT',
+                        payload: put,
                         headers: {
                             'Content-Type':'application/json',
                             'Authorization':'Bearer ' + jwt
@@ -353,9 +366,7 @@ describe('RPGify Integration Test', () => {
                         done();
                     });
                 });
-
             });
-
         });
     });
 });

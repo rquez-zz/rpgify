@@ -10,7 +10,7 @@ module.exports = [
         }
     },
     {
-        method: 'PATCH',
+        method: 'PUT',
         path: '/user',
         handler: userHandler.updateUser
     },
