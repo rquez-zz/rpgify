@@ -3,6 +3,7 @@ const fs = require('fs');
 
 const jwtHelper = require('./app/helpers/jwt');
 const config = require('./app/config/rpgify');
+const swagger = require('./app/config/swagger');
 const db = require('./app/helpers/db');
 
 const server = new Hapi.Server();
@@ -23,7 +24,8 @@ server.register([
 }, {
     register: require('inert')
 }, {
-    register: require('hapi-swagger')
+    register: require('hapi-swagger'),
+    options: swagger.options
 }, {
     register: require('hapi-auth-google'),
     options: config.googleOpts
