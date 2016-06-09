@@ -65,10 +65,13 @@ const user = {
     },
     deleteUser: (req, reply) => {
 
-        User.findOneAndRemove({ _id: req.auth.credentials._id }, (err) => {
+        User.findOneAndRemove({ _id: req.auth.credentials._id }, (err, user) => {
 
-            if (err) {
+            if (!user) {
                 return reply(Boom.notFound('User not found'));
+            }
+            if (err) {
+                return reply(Boom.badImplementation('Error deleting user from db', err));
             }
 
             return reply().code(204);
