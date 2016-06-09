@@ -39,8 +39,11 @@ const user = {
 
         var put = req.payload;
 
-        User.update({ _id: req.auth.credentials._id }, put, (err, res) => {
+        User.findOneAndUpdate({ _id: req.auth.credentials._id }, put, (err, user) => {
 
+            if (!user) {
+                return reply(Boom.notFound('User not found'));
+            }
             if (err) {
                 return reply(Boom.badImplementation('Error updating user', err));
             }

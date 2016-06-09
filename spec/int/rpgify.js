@@ -388,6 +388,33 @@ describe('RPGify Integration Test', () => {
                     expect(statusCode).to.equal(404);
                 });
             });
+
+            describe('When a user that does not exist is updated', () => {
+
+                var put = {
+                    name: 'newName',
+                    email: 'new@email.com'
+                };
+
+                before(done => {
+                    server.inject({
+                        url:'/user',
+                        method:'PUT',
+                        headers: {
+                            'Content-Type':'application/json',
+                            'Authorization':'Bearer ' + jwt
+                        },
+                        payload: put
+                    }, response => {
+                        statusCode = response.statusCode;
+                        done();
+                    });
+                });
+
+                it("should return a 404 status code", () => {
+                    expect(statusCode).to.equal(404);
+                });
+            });
         });
     });
 });
