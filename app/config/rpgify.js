@@ -21,7 +21,7 @@ const config = {
         workFactor: env.WORK_FACTOR || 10
     },
     getable: {
-        user: 'name email skills userExp signup lastLogin -_id'
+        user: 'name email userExp signup lastLogin -_id'
     },
     googleOpts: {
         REDIRECT_URL: '/auth-callback',
